@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using STOCK.API.Core.IRepository;
 using STOCK.API.Persistence;
+using STOCK.API.Persistence.Repository;
 
 namespace STOCK.API
 {
@@ -32,6 +34,9 @@ namespace STOCK.API
             services.AddDbContext<AppDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IBrokerRepo, BrokerRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

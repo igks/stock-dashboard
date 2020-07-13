@@ -1,4 +1,6 @@
 using AutoMapper;
+using STOCK.API.Controllers.Dto;
+using STOCK.API.Core.Model;
 
 namespace STOCK.API.Helpers.Mapping
 {
@@ -6,7 +8,8 @@ namespace STOCK.API.Helpers.Mapping
     {
         public AutoMapper()
         {
-
+            CreateMap<Broker, ViewBrokerDto>();
+            CreateMap<SaveBrokerDto, Broker>();
         }
     }
 }
