@@ -10,6 +10,9 @@ namespace STOCK.API.Helpers.Mapping
         {
             CreateMap<Broker, ViewBrokerDto>();
             CreateMap<SaveBrokerDto, Broker>();
+
+            CreateMap<Stock, ViewStockDto>();
+            CreateMap<SaveStockDto, Stock>();
         }
     }
 }
