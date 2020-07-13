@@ -4,6 +4,7 @@
 
 # own folder
 doc/
+Migrations/
 
 ### Angular ###
 ## Angular ##
