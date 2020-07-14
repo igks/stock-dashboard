@@ -13,10 +13,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from './services/alert.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ChartsModule } from 'ng2-charts';
 
 import { DashboardComponent } from './displays/dashboard/dashboard.component';
 import { BrokerListComponent } from './displays/master/broker/broker-list/broker-list.component';
 import { BrokerFormComponent } from './displays/master/broker/broker-form/broker-form.component';
+import { StockListComponent } from './displays/master/stock/stock-list/stock-list.component';
+import { StockFormComponent } from './displays/master/stock/stock-form/stock-form.component';
 
 const routes: Routes = [
   {
@@ -40,13 +44,31 @@ const routes: Routes = [
     component: BrokerFormComponent,
   },
   {
+    path: 'stock',
+    component: StockListComponent,
+  },
+  {
+    path: 'stock/form',
+    component: StockFormComponent,
+  },
+  {
+    path: 'stock/form/:id',
+    component: StockFormComponent,
+  },
+  {
     path: '**',
     redirectTo: 'dashboard',
   },
 ];
 
 @NgModule({
-  declarations: [DashboardComponent, BrokerListComponent, BrokerFormComponent],
+  declarations: [
+    DashboardComponent,
+    BrokerListComponent,
+    BrokerFormComponent,
+    StockListComponent,
+    StockFormComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule.forRoot(routes),
@@ -61,6 +83,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MatMenuModule,
+    MatDatepickerModule,
+    ChartsModule,
   ],
   exports: [RouterModule],
   providers: [AlertService, ToastrService],

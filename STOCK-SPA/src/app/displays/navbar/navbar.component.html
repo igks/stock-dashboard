@@ -28,7 +28,11 @@
         >
           Broker <mat-icon>keyboard_arrow_right</mat-icon>
         </button>
-        <button mat-menu-item class="focus:outline-none">
+        <button
+          mat-menu-item
+          [routerLink]="['/stock']"
+          class="focus:outline-none"
+        >
           Stock <mat-icon>keyboard_arrow_right</mat-icon>
         </button>
       </mat-menu>

@@ -1,3 +1,166 @@
-<p>
-  stock-list works!
-</p>
+<div class="m-auto p-2">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <div class="text-2xl my-10">
+          <mat-icon class="align-middle text-2xl mr-1">list</mat-icon>
+          Stock List
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mb-10">
+        <span class="mr-2">
+          <button
+            mat-button
+            class="p-1 text-md text-white bg-blue-500 rounded-md focus:outline-none"
+            [routerLink]="['/stock/form']"
+          >
+            <mat-icon class="inline-block align-middle mr-2">add</mat-icon>
+            <span>Add Stock</span>
+          </button>
+        </span>
+        <span class="ml-2">
+          <button
+            mat-button
+            class="p-1 text-md text-white bg-gray-500 rounded-md focus:outline-none"
+            (click)="isFiltered ? clearFilter() : setShowFilterForm()"
+          >
+            <mat-icon class="inline-block align-middle mr-2"
+              >filter_list</mat-icon
+            >
+            <span>{{ !isFiltered ? "Add Filter" : "Clear Filter" }}</span>
+          </button>
+        </span>
+      </div>
+      <div *ngIf="showFilterForm">
+        <form name="form" [formGroup]="form">
+          <div class="mt-4 flex-row">
+            <mat-form-field class="mr-4">
+              <mat-label>Filter by code</mat-label>
+              <input matInput formControlName="code" autocomplete="off" />
+            </mat-form-field>
+            <mat-form-field class="mr-8">
+              <mat-label>Filter by name</mat-label>
+              <input matInput formControlName="name" autocomplete="off" />
+            </mat-form-field>
+
+            <span class="mr-2">
+              <button
+                mat-button
+                class="p-1 text-md text-white bg-blue-500 rounded-md focus:outline-none"
+                (click)="addFilter()"
+              >
+                <mat-icon class="inline-block align-middle mr-2"
+                  >check_circle_outline</mat-icon
+                >
+                <span>SET FILTER</span>
+              </button>
+            </span>
+
+            <span class="ml-2">
+              <button
+                mat-button
+                class="p-1 text-md text-white bg-gray-500 rounded-md focus:outline-none"
+                (click)="cancelFilter()"
+              >
+                <mat-icon class="inline-block align-middle mr-2"
+                  >cancel</mat-icon
+                >
+                <span>CANCEL</span>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="isLoading" class="text-center">
+        <span class="text-lg">Loading...</span>
+      </div>
+
+      <div class="mat-elevation-z8" *ngIf="!isLoading && !showFilterForm">
+        <div style="max-height: 600px; overflow-y: auto;">
+          <table
+            mat-table
+            [dataSource]="stocks"
+            matSort
+            (matSortChange)="sortChange($event)"
+            class="w-full"
+          >
+            <!-- Code Column -->
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+              <td mat-cell *matCellDef="let stock">
+                {{ stock.code }}
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let stock">{{ stock.name }}</td>
+            </ng-container>
+
+            <!-- Max Volume Column -->
+            <ng-container matColumnDef="volume">
+              <th mat-header-cell *matHeaderCellDef>
+                Max Volume
+              </th>
+              <td mat-cell *matCellDef="let stock">{{ stock.maxVolume }}</td>
+            </ng-container>
+
+            <!-- Option Column -->
+            <ng-container matColumnDef="option">
+              <th mat-header-cell *matHeaderCellDef>Option</th>
+              <td mat-cell *matCellDef="let stock">
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="moreBrokerOptions"
+                  aria-label="moreBrokerOptions"
+                  (click)="$event.stopPropagation()"
+                  class="focus:outline-none"
+                >
+                  <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button>
+
+                <mat-menu #moreBrokerOptions="matMenu">
+                  <button
+                    mat-menu-item
+                    aria-label="edit"
+                    [routerLink]="['/stock/form/' + stock.id]"
+                    class="focus:outline-none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    aria-label="remove"
+                    (click)="deleteStock(stock.id)"
+                    class="focus:outline-none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>Remove</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator
+          #paginator
+          [length]="pagination.totalItems"
+          [pageIndex]="pagination.currentPage - 1"
+          [pageSize]="pagination.pageSize"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="pageEvents($event)"
+          showFirstLastButtons="true"
+        >
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

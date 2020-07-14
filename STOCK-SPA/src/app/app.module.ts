@@ -13,11 +13,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ChartsModule } from 'ng2-charts';
 
 import { BrokerService } from './services/broker.service';
+import { StockService } from './services/stock.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AlertService } from './services/alert.service';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
@@ -37,8 +41,11 @@ import { ToastrService, ToastrModule } from 'ngx-toastr';
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ChartsModule,
   ],
-  providers: [BrokerService, AlertService, ToastrService],
+  providers: [AlertService, ToastrService, BrokerService, StockService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

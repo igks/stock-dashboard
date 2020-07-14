@@ -49,7 +49,7 @@ export class BrokerListComponent implements OnInit {
         this.isLoading = false;
       },
       (error) => {
-        alert(error);
+        this.alert.Error('', error);
         this.isLoading = false;
       }
     );
@@ -69,7 +69,8 @@ export class BrokerListComponent implements OnInit {
           this.isLoading = false;
         },
         (error) => {
-          alert(error);
+          this.alert.Error('', error);
+          this.isLoading = false;
         }
       );
   }

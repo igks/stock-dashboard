@@ -1,3 +1,83 @@
-<p>
-  stock-form works!
-</p>
+<div class="m-auto p-2">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <div class="text-2xl my-10">
+          <mat-icon class="align-middle text-2xl mr-1">library_books</mat-icon>
+          {{ isUpdate ? "Edit Stock" : "Add New Stock" }}
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form name="form" [formGroup]="form">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Stock code</mat-label>
+          <input matInput formControlName="code" autocomplete="off" />
+          <mat-error>
+            Stock code is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Stock name</mat-label>
+          <input matInput formControlName="name" autocomplete="off" />
+          <mat-error>
+            Stock name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Max volume</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="maxVolume"
+            autocomplete="off"
+          />
+          <mat-error>
+            Volume is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>First Update Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="firstUpdateVolume"
+            autocomplete="off"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="mt-4">
+          <span class="mr-4">
+            <button
+              class="focus:outline-none"
+              mat-raised-button
+              [routerLink]="'/stock'"
+            >
+              <mat-icon class="mr-2">cancel</mat-icon>
+              <span>Cancel</span>
+            </button>
+          </span>
+          <span>
+            <button
+              class="focus:outline-none bg-blue-500 text-white"
+              mat-raised-button
+              [disabled]="form.invalid"
+              (click)="submit()"
+            >
+              <mat-icon class="mr-2">archive</mat-icon>
+              <span>Save</span>
+            </button>
+          </span>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
