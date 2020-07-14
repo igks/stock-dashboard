@@ -1,0 +1,11 @@
+using System;
+
+namespace STOCK.API.Helpers.Params
+{
+    public class StockPriceParams : BaseParams
+    {
+        public DateTime Date { get; set; }
+
+        public string Stock { get; set; }
+    }
+}
