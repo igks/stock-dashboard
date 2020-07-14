@@ -1,0 +1,58 @@
+<mat-toolbar class="bg-blue-600 text-white">
+  <div class="ml-3">
+    <a [routerLink]="['/dashboard']">
+      <mat-icon>class</mat-icon>
+      <span class="ml-2 font-galada text-3xl">
+        Stock Manager
+      </span>
+    </a>
+  </div>
+
+  <div class="mx-32 flex flex-row">
+    <div class="mx-2">
+      <button
+        mat-button
+        [matMenuTriggerFor]="master"
+        class="p-2 text-lg focus:outline-none"
+      >
+        <span class="font-muli">Master</span>
+        <mat-icon class="inline-block align-middle"
+          >keyboard_arrow_down</mat-icon
+        >
+      </button>
+      <mat-menu #master="matMenu">
+        <button
+          mat-menu-item
+          [routerLink]="['/broker']"
+          class="focus:outline-none"
+        >
+          Broker <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+        <button mat-menu-item class="focus:outline-none">
+          Stock <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="mx-2">
+      <button
+        mat-button
+        [matMenuTriggerFor]="transaction"
+        class="p-2 text-lg focus:outline-none"
+      >
+        <span class="font-muli">Transaction</span>
+        <mat-icon class="inline-block align-middle"
+          >keyboard_arrow_down</mat-icon
+        >
+      </button>
+      <mat-menu #transaction="matMenu">
+        <button mat-menu-item class="focus:outline-none">
+          Stock Price <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+        <button mat-menu-item class="focus:outline-none">
+          Stock Volume <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

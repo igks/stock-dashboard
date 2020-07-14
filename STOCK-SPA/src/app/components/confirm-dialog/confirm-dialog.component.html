@@ -1,0 +1,16 @@
+<h1 matDialogTitle>Please confirm the action!</h1>
+<div mat-dialog-content>The data will be delete and can't be undo!</div>
+<div mat-dialog-actions class="flex justify-between pt-24">
+  <button mat-button class="focus:outline-none" (click)="cancel()">
+    <mat-icon class="mr-2">cancel</mat-icon> <span>Cancel</span>
+  </button>
+
+  <button
+    mat-raised-button
+    class="bg-blue-500 text-white focus:outline-none"
+    (click)="confirm()"
+  >
+    <mat-icon class="mr-2">delete</mat-icon>
+    <span>Delete</span>
+  </button>
+</div>

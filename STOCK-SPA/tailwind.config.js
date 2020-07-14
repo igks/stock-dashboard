@@ -1,8 +1,13 @@
 module.exports = {
   purge: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        galada: ["Galada", "cursive"],
+        muli: ["Muli", "sans-serif"],
+      },
+    },
   },
   variants: {},
   plugins: [],
-}
+};
