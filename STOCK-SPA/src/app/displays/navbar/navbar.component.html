@@ -50,7 +50,11 @@
         >
       </button>
       <mat-menu #transaction="matMenu">
-        <button mat-menu-item class="focus:outline-none">
+        <button
+          mat-menu-item
+          [routerLink]="['/stockprice']"
+          class="focus:outline-none"
+        >
           Stock Price <mat-icon>keyboard_arrow_right</mat-icon>
         </button>
         <button mat-menu-item class="focus:outline-none">

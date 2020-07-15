@@ -35,7 +35,6 @@ export class StockListComponent implements OnInit {
     this.form = this.formBuilder.group({
       code: [''],
       name: [''],
-      volume: [''],
     });
 
     this.loadStock();
@@ -67,7 +66,6 @@ export class StockListComponent implements OnInit {
         (res: PaginatedResult<Stock[]>) => {
           this.stocks = res.result;
           this.pagination = res.pagination;
-          this.isLoading = false;
         },
         (error) => {
           this.alert.Error('', error);

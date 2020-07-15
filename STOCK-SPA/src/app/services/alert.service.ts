@@ -25,7 +25,13 @@ export class AlertService {
     this.toastr.info(message, title);
   }
 
-  Confirm() {
-    return this.dialog.open(ConfirmDialogComponent);
+  Confirm(
+    confirmButton = 'Delete',
+    confirmMessage = "The data will be delete and can't be undo!"
+  ) {
+    var dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.componentInstance.confirmButton = confirmButton;
+    dialogRef.componentInstance.confirmMessage = confirmMessage;
+    return dialogRef;
   }
 }

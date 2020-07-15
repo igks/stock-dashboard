@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using STOCK.API.Controllers.Dto;
 using STOCK.API.Core.IRepository;
 using STOCK.API.Core.Model;
 using STOCK.API.Helpers;
 using STOCK.API.Helpers.Params;
+using LumenWorks.Framework.IO.Csv;
+using System.IO;
 
 namespace STOCK.API.Controllers
 {
@@ -65,6 +68,14 @@ namespace STOCK.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            var recordId = stockPriceRepo.isRecordExist(stockPriceDto);
+            if (recordId > 0)
+            {
+                string str = "duplicate";
+                object data = new { str, recordId };
+                return StatusCode(200, data);
+            }
+
             var stock = mapper.Map<SaveStockPriceDto, StockPrice>(stockPriceDto);
             stockPriceRepo.Add(stock);
             if (await unitOfWork.CompleteAsync() == false)
@@ -75,6 +86,42 @@ namespace STOCK.API.Controllers
             stock = await stockPriceRepo.GetById(stock.Id);
             var result = mapper.Map<StockPrice, ViewStockPriceDto>(stock);
             return Ok(result);
+        }
+
+        [HttpPost("historyprice")]
+        public async Task<IActionResult> UploadHistory(IFormFile file)
+        {
+            var recordAdded = await stockPriceRepo.RecordHistoryPrice(file);
+            if (recordAdded > 0)
+            {
+                if (await unitOfWork.CompleteAsync() == false)
+                {
+                    return StatusCode(500, "Add stock failed on save");
+                }
+            }
+            if (recordAdded == 0)
+            {
+                return StatusCode(500, "Not stock code match in master stock");
+            }
+            return Ok();
+        }
+
+        [HttpPost("dailyprice")]
+        public async Task<IActionResult> UploadDaily(IFormFile file)
+        {
+            var recordAdded = await stockPriceRepo.RecordDailyPrice(file);
+            if (recordAdded > 0)
+            {
+                if (await unitOfWork.CompleteAsync() == false)
+                {
+                    return StatusCode(500, "Add stock failed on save");
+                }
+            }
+            if (recordAdded == 0)
+            {
+                return StatusCode(500, "Not stock code match in master stock");
+            }
+            return Ok();
         }
 
         [HttpPut("{id}")]

@@ -1,0 +1,278 @@
+<div class="m-auto p-2">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <div class="text-2xl my-10">
+          <mat-icon class="align-middle text-2xl mr-1">list</mat-icon>
+          Stock Price List
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mb-10">
+        <span class="mr-2">
+          <button
+            mat-button
+            class="p-1 text-md text-white bg-blue-500 rounded-md focus:outline-none"
+            [routerLink]="['/stockprice/form']"
+          >
+            <mat-icon class="inline-block align-middle mr-2">add</mat-icon>
+            <span>Add Stock Price</span>
+          </button>
+        </span>
+        <span class="mx-2">
+          <button
+            mat-button
+            [matMenuTriggerFor]="moreUploadOption"
+            class="p-1 text-md text-white bg-orange-400 rounded-md focus:outline-none"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-icon class="inline-block align-middle mr-2"
+              >cloud_upload</mat-icon
+            >
+            <span>Upload File</span>
+          </button>
+
+          <mat-menu #moreUploadOption="matMenu">
+            <button
+              mat-menu-item
+              class="focus:outline-none"
+              (click)="dailyPrice.click()"
+            >
+              <mat-icon>cloud_upload</mat-icon>
+              <span>Daily Price</span>
+            </button>
+            <input
+              type="file"
+              #dailyPrice
+              hidden
+              (change)="uploadFile('daily', $event)"
+            />
+
+            <button
+              mat-menu-item
+              class="focus:outline-none"
+              (click)="stockPriceHistory.click()"
+            >
+              <mat-icon>cloud_upload</mat-icon>
+              <span>Stock Price History</span>
+            </button>
+            <input
+              type="file"
+              #stockPriceHistory
+              hidden
+              (change)="uploadFile('history', $event)"
+            />
+          </mat-menu>
+        </span>
+        <span class="ml-2">
+          <button
+            mat-button
+            class="p-1 text-md text-white bg-gray-500 rounded-md focus:outline-none"
+            (click)="isFiltered ? clearFilter() : setShowFilterForm()"
+          >
+            <mat-icon class="inline-block align-middle mr-2"
+              >filter_list</mat-icon
+            >
+            <span>{{ !isFiltered ? "Add Filter" : "Clear Filter" }}</span>
+          </button>
+        </span>
+      </div>
+      <div *ngIf="showFilterForm">
+        <form name="form" [formGroup]="form">
+          <div class="mt-4 flex-row">
+            <mat-form-field class="mr-8">
+              <mat-label>Filter by date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="date"
+                autocomplete="off"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mr-8">
+              <mat-label>Filter by stock</mat-label>
+              <input matInput formControlName="stock" autocomplete="off" />
+            </mat-form-field>
+
+            <span class="mr-2">
+              <button
+                mat-button
+                class="p-1 text-md text-white bg-blue-500 rounded-md focus:outline-none"
+                (click)="addFilter()"
+              >
+                <mat-icon class="inline-block align-middle mr-2"
+                  >check_circle_outline</mat-icon
+                >
+                <span>SET FILTER</span>
+              </button>
+            </span>
+
+            <span class="ml-2">
+              <button
+                mat-button
+                class="p-1 text-md text-white bg-gray-500 rounded-md focus:outline-none"
+                (click)="cancelFilter()"
+              >
+                <mat-icon class="inline-block align-middle mr-2"
+                  >cancel</mat-icon
+                >
+                <span>CANCEL</span>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="isLoading" class="text-center">
+        <span class="text-lg">Loading...</span>
+      </div>
+
+      <div *ngIf="!isLoading && stockPrices.length == 0" class="text-center">
+        <span class="text-lg">No Data Available...</span>
+      </div>
+
+      <div
+        class="mat-elevation-z8"
+        *ngIf="!isLoading && !showFilterForm && stockPrices.length > 0"
+      >
+        <div style="max-height: 500px; overflow-y: auto;">
+          <table
+            mat-table
+            [dataSource]="stockPrices"
+            matSort
+            (matSortChange)="sortChange($event)"
+            class="w-full"
+          >
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.date | date: "dd MMM yyyy" }}
+              </td>
+            </ng-container>
+
+            <!-- Stock Column -->
+            <ng-container matColumnDef="stock">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.stock }}
+              </td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef>Price</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.price }}
+              </td>
+            </ng-container>
+
+            <!-- Change Column -->
+            <ng-container matColumnDef="change">
+              <th mat-header-cell *matHeaderCellDef>Change</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.change }}
+              </td>
+            </ng-container>
+
+            <!-- Change% Column -->
+            <ng-container matColumnDef="change-ratio">
+              <th mat-header-cell *matHeaderCellDef>Change (%)</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.changeRatio }}
+              </td>
+            </ng-container>
+
+            <!-- Open Column -->
+            <ng-container matColumnDef="open">
+              <th mat-header-cell *matHeaderCellDef>Open</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.open }}
+              </td>
+            </ng-container>
+
+            <!-- High Column -->
+            <ng-container matColumnDef="high">
+              <th mat-header-cell *matHeaderCellDef>High</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.high }}
+              </td>
+            </ng-container>
+
+            <!-- Low Column -->
+            <ng-container matColumnDef="low">
+              <th mat-header-cell *matHeaderCellDef>Low</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.low }}
+              </td>
+            </ng-container>
+
+            <!-- Volume Column -->
+            <ng-container matColumnDef="volume">
+              <th mat-header-cell *matHeaderCellDef>Volume</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                {{ stockPrice.volume }}
+              </td>
+            </ng-container>
+
+            <!-- Option Column -->
+            <ng-container matColumnDef="option">
+              <th mat-header-cell *matHeaderCellDef>Option</th>
+              <td mat-cell *matCellDef="let stockPrice">
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="moreOptions"
+                  aria-label="moreBrokerOptions"
+                  (click)="$event.stopPropagation()"
+                  class="focus:outline-none"
+                >
+                  <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button>
+
+                <mat-menu #moreOptions="matMenu">
+                  <button
+                    mat-menu-item
+                    aria-label="edit"
+                    [routerLink]="['/stockprice/form/' + stockPrice.id]"
+                    class="focus:outline-none"
+                  >
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+
+                  <button
+                    mat-menu-item
+                    aria-label="remove"
+                    (click)="deleteStockPrice(stockPrice.id)"
+                    class="focus:outline-none"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>Remove</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator
+          #paginator
+          [length]="pagination.totalItems"
+          [pageIndex]="pagination.currentPage - 1"
+          [pageSize]="pagination.pageSize"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="pageEvents($event)"
+          showFirstLastButtons="true"
+        >
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

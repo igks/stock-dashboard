@@ -1,0 +1,166 @@
+<div class="m-auto p-2">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <div class="text-2xl my-10">
+          <mat-icon class="align-middle text-2xl mr-1">library_books</mat-icon>
+          {{ isUpdate ? "Edit Stock Price" : "Add New Stock Price" }}
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form name="form" [formGroup]="form">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="date"
+            autocomplete="off"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error>
+            Date is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Select stock</mat-label>
+          <mat-select formControlName="stockId">
+            <mat-option *ngFor="let stock of stockList" [value]="stock.id">
+              {{ stock.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            Stock is required
+          </mat-error>
+        </mat-form-field>
+
+        <div class="flex flex-row justify-between">
+          <mat-form-field appearance="outline" class="w-1/5">
+            <mat-label>Price</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="price"
+              autocomplete="off"
+            />
+            <mat-error>
+              Price is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-1/5">
+            <mat-label>Open</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="open"
+              autocomplete="off"
+            />
+            <mat-error>
+              Open price is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-1/5">
+            <mat-label>High</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="high"
+              autocomplete="off"
+            />
+            <mat-error>
+              High price is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-1/5">
+            <mat-label>Low</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="low"
+              autocomplete="off"
+            />
+            <mat-error>
+              Low price is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Volume</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="volume"
+            autocomplete="off"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Change (%)</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="change"
+            autocomplete="off"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Change Ratio</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="changeRatio"
+            autocomplete="off"
+          />
+        </mat-form-field>
+
+        <div class="mt-4">
+          <span class="mr-2">
+            <button
+              class="focus:outline-none"
+              mat-raised-button
+              [routerLink]="'/stockprice'"
+            >
+              <mat-icon class="mr-2">cancel</mat-icon>
+              <span>Cancel</span>
+            </button>
+          </span>
+
+          <span class="mx-2" *ngIf="!isUpdate">
+            <button
+              class="focus:outline-none bg-blue-500 text-white"
+              mat-raised-button
+              [disabled]="form.invalid"
+              (click)="submit()"
+            >
+              <mat-icon class="mr-2">archive</mat-icon>
+              <span>Save & Add</span>
+            </button>
+          </span>
+
+          <span>
+            <button
+              class="focus:outline-none bg-blue-500 text-white"
+              mat-raised-button
+              [disabled]="form.invalid"
+              (click)="submit(true)"
+            >
+              <mat-icon class="mr-2">archive</mat-icon>
+              <span>Save</span>
+            </button>
+          </span>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

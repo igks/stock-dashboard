@@ -4,7 +4,7 @@ import { Stock } from 'src/app/models/stock';
 import { StockService } from 'src/app/services/stock.service';
 import { DateHelperService } from 'src/app/services/date-helper.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { FormBuilder, FormGroup, Validators, Form } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-stock-form',
@@ -22,7 +22,6 @@ export class StockFormComponent implements OnInit {
 
   id: number = +this.route.snapshot.params.id;
   isUpdate: boolean = false;
-  stock: Stock;
   form: FormGroup;
 
   ngOnInit() {
@@ -41,12 +40,11 @@ export class StockFormComponent implements OnInit {
       this.isUpdate = true;
 
       this.stockService.getStock(this.id).subscribe((data) => {
-        this.stock = data;
         this.form.setValue({
-          code: this.stock.code,
-          name: this.stock.name,
-          maxVolume: this.stock.maxVolume,
-          firstUpdateVolume: this.stock.firstUpdateVolume,
+          code: data.code,
+          name: data.name,
+          maxVolume: data.maxVolume,
+          firstUpdateVolume: data.firstUpdateVolume,
         });
       });
     }
@@ -88,9 +86,6 @@ export class StockFormComponent implements OnInit {
     this.form.patchValue({
       firstUpdateVolume: validDate.toString(),
     });
-
-    console.log(this.form.value);
-
     if (!this.isUpdate) {
       this.addNewStock();
     } else {

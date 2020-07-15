@@ -10,10 +10,20 @@ namespace STOCK.API.Core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime Date { get; set; }
+
+        [Column(TypeName = "bigint")]
         public int BuyVolume { get; set; }
+
+        [Column(TypeName = "bigint")]
         public double BuyAverage { get; set; }
+
+        [Column(TypeName = "bigint")]
         public int SellVolume { get; set; }
+
+        [Column(TypeName = "bigint")]
         public double SellAverage { get; set; }
+
+        [Column(TypeName = "bigint")]
         public int NetVolume { get; set; }
 
         public virtual Broker Broker { get; set; }

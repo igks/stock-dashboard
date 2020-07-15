@@ -13,6 +13,9 @@ export class ConfirmDialogComponent {
    */
   constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {}
 
+  public confirmButton: string;
+  public confirmMessage: string;
+
   cancel() {
     return this.dialogRef.close(false);
   }

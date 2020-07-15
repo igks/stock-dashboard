@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using STOCK.API.Controllers.Dto;
 using STOCK.API.Core.Model;
 using STOCK.API.Helpers;
 using STOCK.API.Helpers.Params;
@@ -14,5 +16,8 @@ namespace STOCK.API.Core.IRepository
         void Add(StockPrice stockPrice);
         void Update(StockPrice stockPrice);
         void Delete(StockPrice stockPrice);
+        Task<int> RecordDailyPrice(IFormFile file);
+        Task<int> RecordHistoryPrice(IFormFile file);
+        int isRecordExist(SaveStockPriceDto stockPriceDto);
     }
 }

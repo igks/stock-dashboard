@@ -15,12 +15,15 @@ import { ToastrService } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ChartsModule } from 'ng2-charts';
+import { MatSelectModule } from '@angular/material/select';
 
 import { DashboardComponent } from './displays/dashboard/dashboard.component';
 import { BrokerListComponent } from './displays/master/broker/broker-list/broker-list.component';
 import { BrokerFormComponent } from './displays/master/broker/broker-form/broker-form.component';
 import { StockListComponent } from './displays/master/stock/stock-list/stock-list.component';
 import { StockFormComponent } from './displays/master/stock/stock-form/stock-form.component';
+import { StockPriceListComponent } from './displays/transactions/stock-price/stock-price-list/stock-price-list.component';
+import { StockPriceFormComponent } from './displays/transactions/stock-price/stock-price-form/stock-price-form.component';
 
 const routes: Routes = [
   {
@@ -56,6 +59,18 @@ const routes: Routes = [
     component: StockFormComponent,
   },
   {
+    path: 'stockprice',
+    component: StockPriceListComponent,
+  },
+  {
+    path: 'stockprice/form',
+    component: StockPriceFormComponent,
+  },
+  {
+    path: 'stockprice/form/:id',
+    component: StockPriceFormComponent,
+  },
+  {
     path: '**',
     redirectTo: 'dashboard',
   },
@@ -68,6 +83,8 @@ const routes: Routes = [
     BrokerFormComponent,
     StockListComponent,
     StockFormComponent,
+    StockPriceListComponent,
+    StockPriceFormComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +102,7 @@ const routes: Routes = [
     MatMenuModule,
     MatDatepickerModule,
     ChartsModule,
+    MatSelectModule,
   ],
   exports: [RouterModule],
   providers: [AlertService, ToastrService],

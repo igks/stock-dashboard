@@ -22,6 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AlertService } from './services/alert.service';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { MatNativeDateModule } from '@angular/material/core';
+import { StockPriceService } from './services/stock-price.service';
+import { ErrorInterceptorProvider } from './services/error.interceptor';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
@@ -45,7 +47,14 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule,
     ChartsModule,
   ],
-  providers: [AlertService, ToastrService, BrokerService, StockService],
+  providers: [
+    AlertService,
+    ToastrService,
+    BrokerService,
+    StockService,
+    StockPriceService,
+    ErrorInterceptorProvider,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
