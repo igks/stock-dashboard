@@ -69,7 +69,7 @@ namespace STOCK.API.Controllers
             stockRepo.Add(stock);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Create new stock failed on save");
+                return StatusCode(500, "Create new stock failed on save");
             }
 
             stock = await stockRepo.GetById(stock.Id);
@@ -95,7 +95,7 @@ namespace STOCK.API.Controllers
             stockRepo.Update(stock);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Update stock failed on save");
+                return StatusCode(500, "Update stock failed on save");
             }
 
             stock = await stockRepo.GetById(stock.Id);
@@ -115,7 +115,7 @@ namespace STOCK.API.Controllers
             stockRepo.Delete(stock);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Delete stock failed on save");
+                return StatusCode(500, "Delete stock failed on save");
             }
 
             return Ok(id);

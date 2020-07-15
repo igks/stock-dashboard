@@ -70,7 +70,7 @@ namespace STOCK.API.Controllers
             brokerRepo.Add(broker);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Create new broker failed on save");
+                return StatusCode(500, "Create new broker failed on save");
             }
 
             broker = await brokerRepo.GetById(broker.Id);
@@ -96,7 +96,7 @@ namespace STOCK.API.Controllers
             brokerRepo.Update(broker);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Update broker failed on save");
+                return StatusCode(500, "Update broker failed on save");
             }
 
             broker = await brokerRepo.GetById(broker.Id);
@@ -116,7 +116,7 @@ namespace STOCK.API.Controllers
             brokerRepo.Delete(broker);
             if (await unitOfWork.CompleteAsync() == false)
             {
-                throw new Exception(message: "Delete broker failed on save");
+                return StatusCode(500, "Delete broker failed on save");
             }
             return Ok(id);
         }
