@@ -8,11 +8,20 @@ namespace STOCK.API.Helpers.Mapping
     {
         public AutoMapper()
         {
-            CreateMap<Broker, ViewBrokerDto>();
             CreateMap<SaveBrokerDto, Broker>();
+            CreateMap<Broker, ViewBrokerDto>();
 
-            CreateMap<Stock, ViewStockDto>();
             CreateMap<SaveStockDto, Stock>();
+            CreateMap<Stock, ViewStockDto>();
+
+            CreateMap<SaveStockPriceDto, StockPrice>();
+            CreateMap<StockPrice, ViewStockPriceDto>()
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock.Name));
+
+            CreateMap<SaveStockVolumeDto, StockVolume>();
+            CreateMap<StockVolume, ViewStockVolumeDto>()
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock.Name))
+                .ForMember(dest => dest.Broker, opt => opt.MapFrom(src => src.Broker.Name));
         }
     }
 }

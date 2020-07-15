@@ -38,6 +38,9 @@ namespace STOCK.API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBrokerRepo, BrokerRepo>();
             services.AddScoped<IStockRepo, StockRepo>();
+            services.AddScoped<IStockPriceRepo, StockPriceRepo>();
+            services.AddScoped<IStockVolumeRepo, StockVolumeRepo>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

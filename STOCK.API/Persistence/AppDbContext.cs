@@ -10,6 +10,6 @@ namespace STOCK.API.Persistence
         public DbSet<Broker> Broker { get; set; }
         public DbSet<Stock> Stock { get; set; }
         public DbSet<StockPrice> StockPrice { get; set; }
-
+        public DbSet<StockVolume> StockVolume { get; set; }
     }
 }

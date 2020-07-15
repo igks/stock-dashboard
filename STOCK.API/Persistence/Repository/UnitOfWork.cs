@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using STOCK.API.Core.IRepository;
@@ -26,6 +27,7 @@ namespace STOCK.API.Persistence.Repository
 
                 saveResult = 0;
                 msg = ex.ToString();
+                // Console.WriteLine(ex);
             }
             return saveResult > 0;
         }
