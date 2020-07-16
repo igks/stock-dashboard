@@ -4,7 +4,7 @@
       <mat-card-title>
         <div class="text-2xl my-10">
           <mat-icon class="align-middle text-2xl mr-1">list</mat-icon>
-          Stock Price List
+          Stock Volume List
         </div>
       </mat-card-title>
     </mat-card-header>
@@ -14,10 +14,10 @@
           <button
             mat-button
             class="p-1 text-md text-white bg-blue-500 rounded-md focus:outline-none"
-            [routerLink]="['/stockprice/form']"
+            [routerLink]="['/stockvolume/form']"
           >
             <mat-icon class="inline-block align-middle mr-2">add</mat-icon>
-            <span>Add Stock Price</span>
+            <span>Add Stock Volume</span>
           </button>
         </span>
         <span class="mx-2">
@@ -37,31 +37,16 @@
             <button
               mat-menu-item
               class="focus:outline-none"
-              (click)="dailyPrice.click()"
+              (click)="stockPerDate.click()"
             >
               <mat-icon>cloud_upload</mat-icon>
-              <span>Daily Price</span>
+              <span>By Stock Per Date</span>
             </button>
             <input
               type="file"
-              #dailyPrice
+              #stockPerDate
               hidden
-              (change)="uploadFile('daily', $event)"
-            />
-
-            <button
-              mat-menu-item
-              class="focus:outline-none"
-              (click)="stockPriceHistory.click()"
-            >
-              <mat-icon>cloud_upload</mat-icon>
-              <span>Stock Price History</span>
-            </button>
-            <input
-              type="file"
-              #stockPriceHistory
-              hidden
-              (change)="uploadFile('history', $event)"
+              (change)="uploadFile('stockperdate', $event)"
             />
           </mat-menu>
         </span>
@@ -94,6 +79,11 @@
                 [for]="picker"
               ></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="mr-8">
+              <mat-label>Filter by broker</mat-label>
+              <input matInput formControlName="broker" autocomplete="off" />
             </mat-form-field>
 
             <mat-form-field class="mr-8">
@@ -137,7 +127,7 @@
         <span class="text-lg">Upload in progress...</span>
       </div>
 
-      <div *ngIf="!isLoading && stockPrices.length == 0" class="text-center">
+      <div *ngIf="!isLoading && stockVolumes.length == 0" class="text-center">
         <span class="text-lg">No Data Available...</span>
       </div>
 
@@ -146,14 +136,14 @@
         *ngIf="
           !isLoading &&
           !showFilterForm &&
-          stockPrices.length > 0 &&
+          stockVolumes.length > 0 &&
           !isUploading
         "
       >
         <div style="max-height: 500px; overflow-y: auto;">
           <table
             mat-table
-            [dataSource]="stockPrices"
+            [dataSource]="stockVolumes"
             matSort
             (matSortChange)="sortChange($event)"
             class="w-full"
@@ -166,78 +156,69 @@
               </td>
             </ng-container>
 
+            <!-- Broker Column -->
+            <ng-container matColumnDef="broker">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Broker</th>
+              <td mat-cell *matCellDef="let col">
+                {{ col.broker }}
+              </td>
+            </ng-container>
+
             <!-- Stock Column -->
             <ng-container matColumnDef="stock">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.stock }}
+              <td mat-cell *matCellDef="let col">
+                {{ col.stock }}
               </td>
             </ng-container>
 
-            <!-- Price Column -->
-            <ng-container matColumnDef="price">
-              <th mat-header-cell *matHeaderCellDef>Price</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.price }}
+            <!-- Buy Volume Column -->
+            <ng-container matColumnDef="buyVolume">
+              <th mat-header-cell *matHeaderCellDef>Buy Volume</th>
+              <td mat-cell *matCellDef="let col">
+                {{ col.buyVolume }}
               </td>
             </ng-container>
 
-            <!-- Change Column -->
-            <ng-container matColumnDef="change">
-              <th mat-header-cell *matHeaderCellDef>Change</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.change }}
+            <!-- Buy Average Column -->
+            <ng-container matColumnDef="buyAverage">
+              <th mat-header-cell *matHeaderCellDef>Buy Average</th>
+              <td mat-cell *matCellDef="let col">
+                {{ col.buyAverage }}
               </td>
             </ng-container>
 
-            <!-- Change% Column -->
-            <ng-container matColumnDef="change-ratio">
-              <th mat-header-cell *matHeaderCellDef>Change (%)</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.changeRatio }}
+            <!-- Sell Volume Column -->
+            <ng-container matColumnDef="sellVolume">
+              <th mat-header-cell *matHeaderCellDef>Sell Volume</th>
+              <td mat-cell *matCellDef="let col">
+                {{ col.sellVolume }}
               </td>
             </ng-container>
 
-            <!-- Open Column -->
-            <ng-container matColumnDef="open">
-              <th mat-header-cell *matHeaderCellDef>Open</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.open }}
-              </td>
-            </ng-container>
-
-            <!-- High Column -->
-            <ng-container matColumnDef="high">
-              <th mat-header-cell *matHeaderCellDef>High</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.high }}
-              </td>
-            </ng-container>
-
-            <!-- Low Column -->
-            <ng-container matColumnDef="low">
-              <th mat-header-cell *matHeaderCellDef>Low</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.low }}
+            <!-- Sell Average Column -->
+            <ng-container matColumnDef="sellAverage">
+              <th mat-header-cell *matHeaderCellDef>Sell Average</th>
+              <td mat-cell *matCellDef="let col">
+                {{ col.sellAverage }}
               </td>
             </ng-container>
 
             <!-- Volume Column -->
             <ng-container matColumnDef="volume">
               <th mat-header-cell *matHeaderCellDef>Volume</th>
-              <td mat-cell *matCellDef="let stockPrice">
-                {{ stockPrice.volume }}
+              <td mat-cell *matCellDef="let col">
+                {{ col.netVolume }}
               </td>
             </ng-container>
 
             <!-- Option Column -->
             <ng-container matColumnDef="option">
               <th mat-header-cell *matHeaderCellDef>Option</th>
-              <td mat-cell *matCellDef="let stockPrice">
+              <td mat-cell *matCellDef="let col">
                 <button
                   mat-icon-button
                   [matMenuTriggerFor]="moreOptions"
-                  aria-label="moreBrokerOptions"
                   (click)="$event.stopPropagation()"
                   class="focus:outline-none"
                 >
@@ -248,7 +229,7 @@
                   <button
                     mat-menu-item
                     aria-label="edit"
-                    [routerLink]="['/stockprice/form/' + stockPrice.id]"
+                    [routerLink]="['/stockvolume/form/' + col.id]"
                     class="focus:outline-none"
                   >
                     <mat-icon>edit</mat-icon>
@@ -258,7 +239,7 @@
                   <button
                     mat-menu-item
                     aria-label="remove"
-                    (click)="deleteStockPrice(stockPrice.id)"
+                    (click)="deleteStockVolume(col.id)"
                     class="focus:outline-none"
                   >
                     <mat-icon>delete</mat-icon>

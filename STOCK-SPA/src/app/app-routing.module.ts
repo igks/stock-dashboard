@@ -24,6 +24,8 @@ import { StockListComponent } from './displays/master/stock/stock-list/stock-lis
 import { StockFormComponent } from './displays/master/stock/stock-form/stock-form.component';
 import { StockPriceListComponent } from './displays/transactions/stock-price/stock-price-list/stock-price-list.component';
 import { StockPriceFormComponent } from './displays/transactions/stock-price/stock-price-form/stock-price-form.component';
+import { StockVolumeListComponent } from './displays/transactions/stock-volume/stock-volume-list/stock-volume-list.component';
+import { StockVolumeFormComponent } from './displays/transactions/stock-volume/stock-volume-form/stock-volume-form.component';
 
 const routes: Routes = [
   {
@@ -71,6 +73,18 @@ const routes: Routes = [
     component: StockPriceFormComponent,
   },
   {
+    path: 'stockvolume',
+    component: StockVolumeListComponent,
+  },
+  {
+    path: 'stockvolume/form',
+    component: StockVolumeFormComponent,
+  },
+  {
+    path: 'stockvolume/form/:id',
+    component: StockVolumeFormComponent,
+  },
+  {
     path: '**',
     redirectTo: 'dashboard',
   },
@@ -85,6 +99,8 @@ const routes: Routes = [
     StockFormComponent,
     StockPriceListComponent,
     StockPriceFormComponent,
+    StockVolumeListComponent,
+    StockVolumeFormComponent,
   ],
   imports: [
     CommonModule,

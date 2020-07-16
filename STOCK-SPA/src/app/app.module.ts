@@ -24,6 +24,7 @@ import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { MatNativeDateModule } from '@angular/material/core';
 import { StockPriceService } from './services/stock-price.service';
 import { ErrorInterceptorProvider } from './services/error.interceptor';
+import { StockVolumeService } from './services/stock-volume.service';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
@@ -53,6 +54,7 @@ import { ErrorInterceptorProvider } from './services/error.interceptor';
     BrokerService,
     StockService,
     StockPriceService,
+    StockVolumeService,
     ErrorInterceptorProvider,
   ],
   bootstrap: [AppComponent],

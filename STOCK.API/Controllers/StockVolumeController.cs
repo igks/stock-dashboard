@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using STOCK.API.Controllers.Dto;
 using STOCK.API.Core.IRepository;
@@ -66,6 +67,14 @@ namespace STOCK.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            var recordId = stockVolumeRepo.isRecordExist(stockVolumeDto);
+            if (recordId > 0)
+            {
+                string str = "duplicate";
+                object data = new { str, recordId };
+                return StatusCode(200, data);
+            }
+
             var stock = mapper.Map<SaveStockVolumeDto, StockVolume>(stockVolumeDto);
             stockVolumeRepo.Add(stock);
             if (await unitOfWork.CompleteAsync() == false)
@@ -76,6 +85,24 @@ namespace STOCK.API.Controllers
             stock = await stockVolumeRepo.GetById(stock.Id);
             var result = mapper.Map<StockVolume, ViewStockVolumeDto>(stock);
             return Ok(result);
+        }
+
+        [HttpPost("bystockdate")]
+        public async Task<IActionResult> UploadByStockDate(IFormFile file)
+        {
+            var recordAdded = await stockVolumeRepo.RecordByStockDate(file);
+            if (recordAdded > 0)
+            {
+                if (await unitOfWork.CompleteAsync() == false)
+                {
+                    return StatusCode(500, "Add stock failed on save");
+                }
+            }
+            if (recordAdded == 0)
+            {
+                return StatusCode(500, "No stock code match in master stock");
+            }
+            return Ok();
         }
 
         [HttpPut("{id}")]

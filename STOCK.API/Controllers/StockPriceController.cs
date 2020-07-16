@@ -101,7 +101,7 @@ namespace STOCK.API.Controllers
             }
             if (recordAdded == 0)
             {
-                return StatusCode(500, "Not stock code match in master stock");
+                return StatusCode(500, "No stock code match in master stock");
             }
             return Ok();
         }

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { StockPrice } from 'src/app/models/stock-price';
-import { StockPriceService } from 'src/app/services/stock-price.service';
+import { StockVolume } from 'src/app/models/stock-volume';
+import { StockVolumeService } from 'src/app/services/stock-volume.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { DateHelperService } from 'src/app/services/date-helper.service';
 import { Pagination, PaginatedResult } from 'src/app/models/pagination';
@@ -10,12 +10,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
 
 @Component({
-  selector: 'app-stock-price-list',
-  templateUrl: './stock-price-list.component.html',
+  selector: 'app-stock-volume-list',
+  templateUrl: './stock-volume-list.component.html',
 })
-export class StockPriceListComponent implements OnInit {
+export class StockVolumeListComponent implements OnInit {
   constructor(
-    private stockPriceService: StockPriceService,
+    private stockVolumeService: StockVolumeService,
     private dateHelperService: DateHelperService,
     private alert: AlertService,
     private formBuilder: FormBuilder
@@ -23,25 +23,23 @@ export class StockPriceListComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild('stockPriceHistory', { static: false })
-  stockPriceHistory: ElementRef;
-  @ViewChild('dailyPrice', { static: false }) dailyPrice: ElementRef;
+  @ViewChild('stockPerDate', { static: false })
+  stockPerDate: ElementRef;
 
   displayedColumns: string[] = [
     'date',
+    'broker',
     'stock',
-    'price',
-    'change',
-    'change-ratio',
-    'open',
-    'high',
-    'low',
+    'buyVolume',
+    'buyAverage',
+    'sellVolume',
+    'sellAverage',
     'volume',
     'option',
   ];
-  stockPrices: StockPrice[];
+  stockVolumes: StockVolume[];
   pagination: Pagination;
-  stockPriceParams: any = {};
+  stockVolumeParams: any = {};
   model: any;
   isLoading: boolean = false;
   isUploading: boolean = false;
@@ -52,17 +50,19 @@ export class StockPriceListComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       date: [''],
+      broker: [''],
       stock: [''],
     });
 
-    this.loadStockPrice();
+    this.loadStockVolume();
+    console.log(this.stockVolumes);
   }
 
-  loadStockPrice() {
+  loadStockVolume() {
     this.isLoading = true;
-    this.stockPriceService.getStockPrices().subscribe(
-      (res: PaginatedResult<StockPrice[]>) => {
-        this.stockPrices = res.result;
+    this.stockVolumeService.getStockVolumes().subscribe(
+      (res: PaginatedResult<StockVolume[]>) => {
+        this.stockVolumes = res.result;
         this.pagination = res.pagination;
         this.isLoading = false;
       },
@@ -73,16 +73,16 @@ export class StockPriceListComponent implements OnInit {
     );
   }
 
-  updateStockPrice() {
-    this.stockPriceService
-      .getStockPrices(
+  updateStockVolume() {
+    this.stockVolumeService
+      .getStockVolumes(
         this.pagination.currentPage,
         this.pagination.pageSize,
-        this.stockPriceParams
+        this.stockVolumeParams
       )
       .subscribe(
-        (res: PaginatedResult<StockPrice[]>) => {
-          this.stockPrices = res.result;
+        (res: PaginatedResult<StockVolume[]>) => {
+          this.stockVolumes = res.result;
           this.pagination = res.pagination;
         },
         (error) => {
@@ -94,15 +94,15 @@ export class StockPriceListComponent implements OnInit {
   pageEvents(event: any) {
     this.pagination.currentPage = event.pageIndex + 1;
     this.pagination.pageSize = event.pageSize;
-    this.updateStockPrice();
+    this.updateStockVolume();
   }
 
   sortChange(event: any) {
     this.pagination.currentPage = 1;
-    this.stockPriceParams.OrderBy = event.active;
-    this.stockPriceParams.isDescending =
+    this.stockVolumeParams.OrderBy = event.active;
+    this.stockVolumeParams.isDescending =
       event.direction === 'desc' ? true : false;
-    this.updateStockPrice();
+    this.updateStockVolume();
   }
 
   setShowFilterForm() {
@@ -110,22 +110,27 @@ export class StockPriceListComponent implements OnInit {
   }
 
   addFilter() {
-    this.stockPriceParams.date = '';
-    this.stockPriceParams.stock = '';
+    this.stockVolumeParams.date = '';
+    this.stockVolumeParams.broker = '';
+    this.stockVolumeParams.stock = '';
 
     if (this.form.value.date != null && this.form.value.date != '') {
-      this.stockPriceParams.date = this.dateHelperService.dateToSave(
+      this.stockVolumeParams.date = this.dateHelperService.dateToSave(
         this.form.value.date
       );
       this.isFiltered = true;
     }
     if (this.form.value.stock != null && this.form.value.stock != '') {
-      this.stockPriceParams.stock = this.form.value.stock;
+      this.stockVolumeParams.stock = this.form.value.stock;
+      this.isFiltered = true;
+    }
+    if (this.form.value.broker != null && this.form.value.broker != '') {
+      this.stockVolumeParams.broker = this.form.value.broker;
       this.isFiltered = true;
     }
 
     this.showFilterForm = false;
-    this.updateStockPrice();
+    this.updateStockVolume();
   }
 
   cancelFilter() {
@@ -137,20 +142,21 @@ export class StockPriceListComponent implements OnInit {
   clearFilter() {
     this.isFiltered = false;
     this.pagination.currentPage = 1;
-    this.stockPriceParams.date = null;
-    this.stockPriceParams.stock = null;
+    this.stockVolumeParams.date = null;
+    this.stockVolumeParams.broker = null;
+    this.stockVolumeParams.stock = null;
     this.form.reset();
-    this.updateStockPrice();
+    this.updateStockVolume();
   }
 
-  deleteStockPrice(id: number) {
+  deleteStockVolume(id: number) {
     const confirm = this.alert.Confirm();
     confirm.afterClosed().subscribe((result) => {
       if (result === true) {
-        this.stockPriceService.deleteStockPrice(id).subscribe(
+        this.stockVolumeService.deleteStockVolume(id).subscribe(
           () => {
             this.alert.Info('', 'The data has been deleted');
-            this.updateStockPrice();
+            this.updateStockVolume();
           },
           (error) => {
             this.alert.Error('', error);
@@ -167,49 +173,27 @@ export class StockPriceListComponent implements OnInit {
 
       if (!this.isFileValid(ext)) {
         this.alert.Error('File not allowed', 'Please upload only csv file!');
-        this.stockPriceHistory.nativeElement.value = '';
-        this.dailyPrice.nativeElement.value = '';
+        this.stockPerDate.nativeElement.value = '';
         return;
       }
 
       switch (type) {
-        case 'daily':
+        case 'stockperdate':
           this.isUploading = true;
-          this.stockPriceService.uploadDailyPrice(file).subscribe(
+          this.stockVolumeService.uploadByStockDate(file).subscribe(
             (data) => {
               if (data) {
                 if (data.type == HttpEventType.Response) {
                   this.alert.Success('', 'File successfully uploaded.');
-                  this.dailyPrice.nativeElement.value = '';
-                  this.updateStockPrice();
+                  this.stockPerDate.nativeElement.value = '';
+                  this.updateStockVolume();
                   this.isUploading = false;
                 }
               }
             },
             (error) => {
               this.alert.Error('', error);
-              this.dailyPrice.nativeElement.value = '';
-              this.isUploading = false;
-            }
-          );
-          break;
-
-        case 'history':
-          this.isUploading = true;
-          this.stockPriceService.uploadPriceHistory(file).subscribe(
-            (data) => {
-              if (data) {
-                if (data.type == HttpEventType.Response) {
-                  this.alert.Success('', 'File successfully uploaded.');
-                  this.stockPriceHistory.nativeElement.value = '';
-                  this.updateStockPrice();
-                  this.isUploading = false;
-                }
-              }
-            },
-            (error) => {
-              this.alert.Error('', error);
-              this.stockPriceHistory.nativeElement.value = '';
+              this.stockPerDate.nativeElement.value = '';
               this.isUploading = false;
             }
           );

@@ -14,14 +14,14 @@ namespace STOCK.API.Core.Model
         [Column(TypeName = "bigint")]
         public int BuyVolume { get; set; }
 
-        [Column(TypeName = "bigint")]
-        public double BuyAverage { get; set; }
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal BuyAverage { get; set; }
 
         [Column(TypeName = "bigint")]
         public int SellVolume { get; set; }
 
-        [Column(TypeName = "bigint")]
-        public double SellAverage { get; set; }
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal SellAverage { get; set; }
 
         [Column(TypeName = "bigint")]
         public int NetVolume { get; set; }
