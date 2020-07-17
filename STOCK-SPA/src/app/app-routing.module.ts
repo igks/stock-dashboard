@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ChartsModule } from 'ng2-charts';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { DashboardComponent } from './displays/dashboard/dashboard.component';
 import { BrokerListComponent } from './displays/master/broker/broker-list/broker-list.component';
@@ -119,6 +120,7 @@ const routes: Routes = [
     MatDatepickerModule,
     ChartsModule,
     MatSelectModule,
+    MatDividerModule,
   ],
   exports: [RouterModule],
   providers: [AlertService, ToastrService],

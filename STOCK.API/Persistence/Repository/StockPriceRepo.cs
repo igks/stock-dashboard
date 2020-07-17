@@ -52,11 +52,17 @@ namespace STOCK.API.Persistence.Repository
             {
                 stocks = stocks.Where(s => s.Stock.Name.Contains(stockPriceParams.Stock));
             }
+            if (!string.IsNullOrEmpty(stockPriceParams.Price))
+            {
+                var priceParam = Int32.Parse(stockPriceParams.Price);
+                stocks = stocks.Where(s => s.Price == priceParam);
+            }
 
             var columnsMap = new Dictionary<string, Expression<Func<StockPrice, object>>>()
             {
                 ["date"] = s => s.Date,
-                ["stock"] = s => s.Stock.Name
+                ["stock"] = s => s.Stock.Name,
+                ["price"] = s => s.Price
             };
 
             stocks = stocks.ApplyOrdering(stockPriceParams, columnsMap);
