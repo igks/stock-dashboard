@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -14,9 +14,11 @@ import { AlertService } from './services/alert.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { ChartsModule } from 'ng2-charts';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { DashboardComponent } from './displays/dashboard/dashboard.component';
 import { BrokerListComponent } from './displays/master/broker/broker-list/broker-list.component';
@@ -27,6 +29,7 @@ import { StockPriceListComponent } from './displays/transactions/stock-price/sto
 import { StockPriceFormComponent } from './displays/transactions/stock-price/stock-price-form/stock-price-form.component';
 import { StockVolumeListComponent } from './displays/transactions/stock-volume/stock-volume-list/stock-volume-list.component';
 import { StockVolumeFormComponent } from './displays/transactions/stock-volume/stock-volume-form/stock-volume-form.component';
+import { BarChartComponent } from './components/charts/bar-chart/bar-chart.component';
 
 const routes: Routes = [
   {
@@ -102,6 +105,7 @@ const routes: Routes = [
     StockPriceFormComponent,
     StockVolumeListComponent,
     StockVolumeFormComponent,
+    BarChartComponent,
   ],
   imports: [
     CommonModule,
@@ -118,9 +122,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatMenuModule,
     MatDatepickerModule,
-    ChartsModule,
     MatSelectModule,
     MatDividerModule,
+    MatTabsModule,
+    MatSlideToggleModule,
+    MatSliderModule,
   ],
   exports: [RouterModule],
   providers: [AlertService, ToastrService],

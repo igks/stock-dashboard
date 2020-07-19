@@ -1,12 +1,21 @@
-<div class="chart-wrapper">
-  <canvas
-    baseChart
-    [datasets]="barChartData"
-    [labels]="barChartLabels"
-    [options]="barChartOptions"
-    [plugins]="barChartPlugins"
-    [legend]="barChartLegend"
-    [chartType]="barChartType"
-  >
-  </canvas>
-</div>
+<mat-tab-group class="mt-4">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="mr-2">bar_chart</mat-icon>
+      Bar Chart
+    </ng-template>
+    <div class="w-full">
+      <app-bar-chart></app-bar-chart>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="mr-2">show_chart</mat-icon>
+      Line Chart
+    </ng-template>
+    <div class="w-full">
+      Content 2
+    </div>
+  </mat-tab>
+</mat-tab-group>

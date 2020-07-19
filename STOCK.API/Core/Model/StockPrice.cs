@@ -19,7 +19,7 @@ namespace STOCK.API.Core.Model
         public int Volume { get; set; }
         public int Change { get; set; }
 
-        [Column(TypeName = "decimal(5,2)")]
+        [Column(TypeName = "decimal(8,2)")]
         public decimal ChangeRatio { get; set; }
         public virtual Stock Stock { get; set; }
         public int StockId { get; set; }

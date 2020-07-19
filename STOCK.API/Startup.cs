@@ -40,6 +40,7 @@ namespace STOCK.API
             services.AddScoped<IStockRepo, StockRepo>();
             services.AddScoped<IStockPriceRepo, StockPriceRepo>();
             services.AddScoped<IStockVolumeRepo, StockVolumeRepo>();
+            services.AddScoped<IDashboardRepo, DashboardRepo>();
 
         }
 

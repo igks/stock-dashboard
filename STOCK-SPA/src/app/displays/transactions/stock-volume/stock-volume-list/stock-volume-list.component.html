@@ -127,7 +127,10 @@
         <span class="text-lg">Upload in progress...</span>
       </div>
 
-      <div *ngIf="!isLoading && stockVolumes.length == 0" class="text-center">
+      <div
+        *ngIf="!isLoading && stockVolumes.length == 0 && !isUploading"
+        class="text-center"
+      >
         <span class="text-lg">No Data Available...</span>
       </div>
 

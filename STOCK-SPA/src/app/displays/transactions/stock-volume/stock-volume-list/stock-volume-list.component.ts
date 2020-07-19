@@ -55,7 +55,6 @@ export class StockVolumeListComponent implements OnInit {
     });
 
     this.loadStockVolume();
-    console.log(this.stockVolumes);
   }
 
   loadStockVolume() {

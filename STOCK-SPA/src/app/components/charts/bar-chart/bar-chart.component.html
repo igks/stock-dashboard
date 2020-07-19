@@ -1,0 +1,68 @@
+<div class="text-center overflow-hidden">
+  <div aria-label="filter container" class="my-3">
+    <!-- <form name="form" [formGroup]="form"> -->
+    <form name="formParams" [formGroup]="formParams">
+      <div class="flex flex-row justify-between mb-2">
+        <button
+          class="flex bg-green-400 cursor-pointer p-1 rounded-md text-white text-center hover:bg-green-600"
+          (click)="refresh()"
+          [disabled]="formParams.invalid"
+        >
+          <span class="self-end">Refresh</span>
+          <mat-icon class="ml-2 self-end">refresh</mat-icon>
+        </button>
+
+        <mat-slide-toggle
+          [(ngModel)]="isTop5"
+          (change)="toggler($event)"
+          formControlName="isTop5"
+          >{{ toggleText }}</mat-slide-toggle
+        >
+      </div>
+      <div class="flex flex-row justify-between">
+        <div aria-label="select year container" class="w-2/5 mr-2">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Select Year</mat-label>
+            <mat-select formControlName="year">
+              <mat-option *ngFor="let year of yearList" [value]="year">{{
+                year
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div aria-label="select stock container" class="w-2/5 mr-2">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Select stock</mat-label>
+            <mat-select formControlName="stock">
+              <mat-option *ngFor="let stock of stockList" [value]="stock.id">{{
+                stock.code
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div aria-label="select broker container" class="w-3/5">
+          <mat-form-field appearance="outline" *ngIf="!isTop5" class="w-full">
+            <mat-label>Select multi broker (max 5 broker)</mat-label>
+            <mat-select formControlName="broker" multiple>
+              <mat-option *ngFor="let broker of brokerList" [value]="broker.id">
+                {{ broker.code }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div #Chart style="width: 100%; max-height: 600px;"></div>
+  <div class="mt-20">
+    <mat-slider
+      thumbLabel
+      [displayWith]="formatLabel(sliderLabel)"
+      min="1"
+      [max]="maxSlider"
+      class="w-11/12"
+      value="initialValue"
+      (change)="changeLabel($event)"
+    ></mat-slider>
+  </div>
+</div>

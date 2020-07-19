@@ -2,3 +2,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Styling for slider in bar chart */
+.mat-slider-thumb-label {
+  width: 80px !important;
+  height: 80px !important;
+  transform: rotate(-45deg) translate(60px, -20px) !important;
+  border-radius: 50% 50% 50% 0 !important;
+  padding: 10px;
+}
+
+.mat-slider-thumb-label-text {
+  transform: rotate(45deg) !important;
+  font-size: 0.8em;
+}
+
+.mat-slider-thumb {
+  transform: scale(0) !important;
+}
+
+.mat-slider-thumb-label-text {
+  opacity: 1 !important;
+}

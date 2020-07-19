@@ -5,6 +5,20 @@ import { Injectable } from '@angular/core';
 })
 export class DateHelperService {
   constructor() {}
+  private monthList = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   dateToSave(unformat) {
     const dgt = (d) => {
@@ -20,5 +34,18 @@ export class DateHelperService {
     };
     const d = new Date(unformat);
     return [dgt(d.getMonth() + 1), dgt(d.getDate()), d.getFullYear()].join('/');
+  }
+
+  dateToTextView(unformat) {
+    const dgt = (d) => {
+      return d < 10 ? '0' + d : d;
+    };
+
+    const d = new Date(unformat);
+    return [
+      dgt(d.getDate()),
+      this.monthList[d.getMonth()],
+      d.getFullYear(),
+    ].join(' ');
   }
 }

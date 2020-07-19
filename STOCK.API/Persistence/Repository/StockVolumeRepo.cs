@@ -92,15 +92,17 @@ namespace STOCK.API.Persistence.Repository
         {
             // Extract stock code from file name
             // filename format must follow this format
-            // "Stock-YYYY-MM-DD.csv"
-            //   0     1   2  3  
+            // "Br-Stock-YYYY-MM-DD.csv"
+            //          0           1
             var fileName = file.FileName.Split(".");
             var stringCode = fileName[0].Split("-");
-            var stockCode = stringCode[0];
+            // "Br-Stock-YYYY-MM-DD"
+            //  0    1    2   3  4
+            var stockCode = stringCode[1];
             var StockId = TakeStockId(stockCode);
-            var stringYear = stringCode[1];
-            var stringMonth = stringCode[2];
-            var stringDay = stringCode[3];
+            var stringYear = stringCode[2];
+            var stringMonth = stringCode[3];
+            var stringDay = stringCode[4];
             var dateData = String.Join("-", stringYear, stringMonth, stringDay);
 
             // Track if any valid data was add to DB
@@ -130,7 +132,7 @@ namespace STOCK.API.Persistence.Repository
                                 var broker = new Broker()
                                 {
                                     Code = csv[0],
-                                    Name = csv[0] + " Automatic add",
+                                    Name = csv[0],
                                 };
                                 context.Broker.Add(broker);
                                 context.SaveChanges();

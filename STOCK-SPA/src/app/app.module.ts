@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { ChartsModule } from 'ng2-charts';
 
 import { BrokerService } from './services/broker.service';
 import { StockService } from './services/stock.service';
@@ -25,6 +24,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { StockPriceService } from './services/stock-price.service';
 import { ErrorInterceptorProvider } from './services/error.interceptor';
 import { StockVolumeService } from './services/stock-volume.service';
+import { DashboardService } from './services/dashboard.service';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
@@ -46,7 +46,6 @@ import { StockVolumeService } from './services/stock-volume.service';
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    ChartsModule,
   ],
   providers: [
     AlertService,
@@ -56,6 +55,7 @@ import { StockVolumeService } from './services/stock-volume.service';
     StockPriceService,
     StockVolumeService,
     ErrorInterceptorProvider,
+    DashboardService,
   ],
   bootstrap: [AppComponent],
 })

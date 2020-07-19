@@ -12,13 +12,22 @@
     <div class="mx-2">
       <button
         mat-button
-        [matMenuTriggerFor]="master"
-        class="p-2 text-lg focus:outline-none"
+        [routerLink]="['/dashboard']"
+        class="p-2 text-lg focus:outline-none flex items-center font-muli"
       >
-        <span class="font-muli">Master</span>
-        <mat-icon class="inline-block align-middle"
-          >keyboard_arrow_down</mat-icon
-        >
+        <mat-icon class="mr-2">home</mat-icon>
+        Dashboard
+      </button>
+    </div>
+
+    <div class="mx-2">
+      <button
+        mat-button
+        [matMenuTriggerFor]="master"
+        class="p-2 text-lg focus:outline-none flex items-center font-muli"
+      >
+        Master
+        <mat-icon class="ml-2">keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #master="matMenu">
         <button
@@ -42,12 +51,10 @@
       <button
         mat-button
         [matMenuTriggerFor]="transaction"
-        class="p-2 text-lg focus:outline-none"
+        class="p-2 text-lg focus:outline-none flex items-center font-muli"
       >
-        <span class="font-muli">Transaction</span>
-        <mat-icon class="inline-block align-middle"
-          >keyboard_arrow_down</mat-icon
-        >
+        Transaction
+        <mat-icon class="ml-2">keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #transaction="matMenu">
         <button

@@ -90,9 +90,11 @@ namespace STOCK.API.Persistence.Repository
             // Extract date from file name
             // filename format must follow this format
             // "sp-ABCDE-YYYY-MM-DD.csv"
-            //   0  1     2   3  4  
+            //            0          1  
             var fileName = file.FileName.Split(".");
             var stringDate = fileName[0].Split("-");
+            // "sp-ABCDE-YYYY-MM-DD"
+            //   0  1     2   3  4  
             var stringYear = stringDate[2];
             var stringMonth = stringDate[3];
             var stringDay = stringDate[4];
@@ -181,9 +183,11 @@ namespace STOCK.API.Persistence.Repository
             // Extract stock code from file name
             // filename format must follow this format
             // "sph-ABCDE-YYYY-MM-DD.csv"
-            //   0   1     2   3  4  
+            //            0           1 
             var fileName = file.FileName.Split(".");
             var stringCode = fileName[0].Split("-");
+            // "sph-ABCDE-YYYY-MM-DD"
+            //   0   1     2   3  4 
             var stockCode = stringCode[1];
             var StockId = TakeStockId(stockCode);
 
