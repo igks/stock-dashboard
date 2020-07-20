@@ -19,12 +19,15 @@ namespace STOCK.API.Persistence.Repository
         {
             var volume = context.StockVolume.AsQueryable();
             var price = context.StockPrice.AsQueryable();
+
             // select price base on params
             price = price.Where(s => s.StockId == Int32.Parse(dashboardParams.Stock));
             price = price.OrderBy(s => s.Date);
 
-            // take max stock
-            var maxStock = context.Stock.Where(s => s.Id == Int32.Parse(dashboardParams.Stock)).Select(s => s.MaxVolume);
+            // take max stock and start date
+            var stock = context.Stock.FirstOrDefault(s => s.Id == Int32.Parse(dashboardParams.Stock));
+            var maxStock = stock.MaxVolume;
+            var startDate = stock.FirstUpdateVolume;
 
             // sort from highest net volume then take 5 top broker
             var broker = new List<int>();
@@ -54,31 +57,118 @@ namespace STOCK.API.Persistence.Repository
             }
 
             // collect database base on selected parameter
-            volume = volume
+            var volumeList = volume
                 .Where(v => broker.Contains(v.BrokerId) &&
-                        v.Date.Year == dashboardParams.Year &&
-                        v.StockId.ToString() == dashboardParams.Stock &&
-                        v.NetVolume > 0
-                );
+                        v.Date.Date >= startDate.Date &&
+                        v.StockId.ToString() == dashboardParams.Stock
+                ).ToList();
 
-            var summary = volume.GroupBy(v => v.BrokerId).Select(g => new
-            {
-                broker = context.Broker.FirstOrDefault(b => b.Id == g.Key).Name,
-                total = g.Sum(i => i.NetVolume)
-            });
+            var allSummary = new List<object>();
+            var brokerData = new List<object>();
 
-            // take stock price slider exclude saturday and sunday
-            var slider = new List<object>() { };
-            foreach (var item in price)
+            for (var indexVolume = 0; indexVolume < volumeList.Count(); indexVolume++)
             {
-                if (item.Date.DayOfWeek != DayOfWeek.Sunday && item.Date.DayOfWeek != DayOfWeek.Saturday)
+                for (var indexBroker = 0; indexBroker < broker.Count(); indexBroker++)
                 {
-                    slider.Add(new { stockDate = item.Date, price = item.Price });
+                    if (broker[indexBroker] == volumeList[indexVolume].BrokerId)
+                    {
+                        brokerData.Add(new
+                        {
+                            date = volumeList[indexVolume].Date,
+                            broker = context.Broker.FirstOrDefault(b => b.Id == volumeList[indexVolume].BrokerId).Name,
+                            netVolume = volumeList[indexVolume].NetVolume
+                        });
+                    }
                 }
+            }
+            var brokerdatalength = brokerData.Count();
+            Console.WriteLine(brokerdatalength);
+
+            foreach (var item in brokerData)
+            {
+
+                Console.WriteLine(item.netVolume);
+
 
             }
 
-            return (new { summary, maxStock, slider });
+            return (new { });
+
+            foreach (var item in broker)
+            {
+                brokerData.Clear();
+                for (var indexVolume = 0; indexVolume < volumeList.Count(); indexVolume++)
+                {
+                    var bufferNetVolumeACC = 0;
+                    if (item == volumeList[indexVolume].BrokerId)
+                    {
+                        if (brokerData.Count() == 0)
+                        {
+                            var netVolume = 0;
+                            if (volumeList[indexVolume].NetVolume > 0)
+                            {
+                                netVolume = volumeList[indexVolume].NetVolume;
+                            }
+
+                            bufferNetVolumeACC = netVolume;
+                            brokerData.Add(new
+                            {
+                                date = volumeList[indexVolume].Date,
+                                accVolume = netVolume
+                            });
+                        }
+                        if (brokerData.Count() > 0)
+                        {
+                            var netVolume = 0;
+                            if (volumeList[indexVolume].NetVolume > 0)
+                            {
+                                netVolume = volumeList[indexVolume].NetVolume;
+                            }
+
+                            bufferNetVolumeACC += netVolume;
+                            brokerData.Add(new
+                            {
+                                date = volumeList[indexVolume].Date,
+                                accVolume = bufferNetVolumeACC
+                            });
+                        }
+                    }
+                }
+
+            }
+            // date = y.
+            //         })
+            //     for (var indexVolume = 0; indexVolume < volumeList.Count(); indexVolume++)
+            //     {
+            //         if (allSummary.Count() <= 0)
+            //         {
+            //             allSummary.Add({
+
+            //             })
+            //         }
+            // allSummary.
+            // Console.WriteLine(volumeList[indexVolume].NetVolume);
+            //     }
+
+
+            // var summary = volume.GroupBy(v => v.BrokerId).Select(g => new
+            // {
+            //     broker = context.Broker.FirstOrDefault(b => b.Id == g.Key).Name,
+            //     total = g.Sum(i => i.NetVolume)
+            // });
+
+            // // take stock price slider exclude saturday and sunday
+            // var slider = new List<object>() { };
+            // foreach (var item in price)
+            // {
+            //     if (item.Date.DayOfWeek != DayOfWeek.Sunday && item.Date.DayOfWeek != DayOfWeek.Saturday)
+            //     {
+            //         slider.Add(new { stockDate = item.Date, price = item.Price });
+            //     }
+
+            // }
+
+            // return (new { summary, maxStock, slider });
         }
     }
 }
