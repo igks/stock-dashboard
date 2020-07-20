@@ -167,36 +167,15 @@ export class StockVolumeListComponent implements OnInit {
 
   uploadFile(type, event) {
     if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      if (!this.isFileValid(ext)) {
-        this.alert.Error('File not allowed', 'Please upload only csv file!');
-        this.stockPerDate.nativeElement.value = '';
-        return;
-      }
-
-      switch (type) {
-        case 'stockperdate':
-          this.isUploading = true;
-          this.stockVolumeService.uploadByStockDate(file).subscribe(
-            (data) => {
-              if (data) {
-                if (data.type == HttpEventType.Response) {
-                  this.alert.Success('', 'File successfully uploaded.');
-                  this.stockPerDate.nativeElement.value = '';
-                  this.updateStockVolume();
-                  this.isUploading = false;
-                }
-              }
-            },
-            (error) => {
-              this.alert.Error('', error);
-              this.stockPerDate.nativeElement.value = '';
-              this.isUploading = false;
-            }
-          );
-          break;
+      const fileList = event.target.files;
+      for (let ind = 0; ind < fileList.length; ind++) {
+        const ext = fileList[ind].name.split('.').pop().toLowerCase();
+        if (!this.isFileValid(ext)) {
+          this.alert.Error('File not allowed', 'Please upload only csv file!');
+          this.stockPerDate.nativeElement.value = '';
+          return;
+        }
+        this.upload(type, fileList[ind]);
       }
     }
   }
@@ -206,5 +185,30 @@ export class StockVolumeListComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  upload(type, file) {
+    switch (type) {
+      case 'stockperdate':
+        this.isUploading = true;
+        this.stockVolumeService.uploadByStockDate(file).subscribe(
+          (data) => {
+            if (data) {
+              if (data.type == HttpEventType.Response) {
+                this.alert.Success('', 'File successfully uploaded.');
+                this.stockPerDate.nativeElement.value = '';
+                this.updateStockVolume();
+                this.isUploading = false;
+              }
+            }
+          },
+          (error) => {
+            this.alert.Error('', error);
+            this.stockPerDate.nativeElement.value = '';
+            this.isUploading = false;
+          }
+        );
+        break;
+    }
   }
 }

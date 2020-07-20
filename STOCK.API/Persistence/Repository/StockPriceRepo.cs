@@ -226,7 +226,7 @@ namespace STOCK.API.Persistence.Repository
 
                                 existRecord.Date = DateTime.Parse(csv[0].Replace('/', '-').Trim());
                                 existRecord.StockId = StockId;
-                                existRecord.Price = 0;
+                                existRecord.Price = Int32.Parse(csv[4].Replace(",", ""));
                                 existRecord.Open = Int32.Parse(csv[1].Replace(",", ""));
                                 existRecord.High = Int32.Parse(csv[2].Replace(",", ""));
                                 existRecord.Low = Int32.Parse(csv[3].Replace(",", ""));
@@ -247,7 +247,7 @@ namespace STOCK.API.Persistence.Repository
                                 {
                                     Date = DateTime.Parse(csv[0].Replace('/', '-').Trim()),
                                     StockId = StockId,
-                                    Price = 0,
+                                    Price = Int32.Parse(csv[4].Replace(",", "")),
                                     Open = Int32.Parse(csv[1].Replace(",", "")),
                                     High = Int32.Parse(csv[2].Replace(",", "")),
                                     Low = Int32.Parse(csv[3].Replace(",", "")),

@@ -162,58 +162,16 @@ export class StockPriceListComponent implements OnInit {
 
   uploadFile(type, event) {
     if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      if (!this.isFileValid(ext)) {
-        this.alert.Error('File not allowed', 'Please upload only csv file!');
-        this.stockPriceHistory.nativeElement.value = '';
-        this.dailyPrice.nativeElement.value = '';
-        return;
-      }
-
-      switch (type) {
-        case 'daily':
-          this.isUploading = true;
-          this.stockPriceService.uploadDailyPrice(file).subscribe(
-            (data) => {
-              if (data) {
-                if (data.type == HttpEventType.Response) {
-                  this.alert.Success('', 'File successfully uploaded.');
-                  this.dailyPrice.nativeElement.value = '';
-                  this.updateStockPrice();
-                  this.isUploading = false;
-                }
-              }
-            },
-            (error) => {
-              this.alert.Error('', error);
-              this.dailyPrice.nativeElement.value = '';
-              this.isUploading = false;
-            }
-          );
-          break;
-
-        case 'history':
-          this.isUploading = true;
-          this.stockPriceService.uploadPriceHistory(file).subscribe(
-            (data) => {
-              if (data) {
-                if (data.type == HttpEventType.Response) {
-                  this.alert.Success('', 'File successfully uploaded.');
-                  this.stockPriceHistory.nativeElement.value = '';
-                  this.updateStockPrice();
-                  this.isUploading = false;
-                }
-              }
-            },
-            (error) => {
-              this.alert.Error('', error);
-              this.stockPriceHistory.nativeElement.value = '';
-              this.isUploading = false;
-            }
-          );
-          break;
+      const fileList = event.target.files;
+      for (let ind = 0; ind < fileList.length; ind++) {
+        const ext = fileList[ind].name.split('.').pop().toLowerCase();
+        if (!this.isFileValid(ext)) {
+          this.alert.Error('File not allowed', 'Please upload only csv file!');
+          this.stockPriceHistory.nativeElement.value = '';
+          this.dailyPrice.nativeElement.value = '';
+          return;
+        }
+        this.upload(type, fileList[ind]);
       }
     }
   }
@@ -223,5 +181,51 @@ export class StockPriceListComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  upload(type, file) {
+    switch (type) {
+      case 'daily':
+        this.isUploading = true;
+        this.stockPriceService.uploadDailyPrice(file).subscribe(
+          (data) => {
+            if (data) {
+              if (data.type == HttpEventType.Response) {
+                this.alert.Success('', 'File successfully uploaded.');
+                this.dailyPrice.nativeElement.value = '';
+                this.updateStockPrice();
+                this.isUploading = false;
+              }
+            }
+          },
+          (error) => {
+            this.alert.Error('', error);
+            this.dailyPrice.nativeElement.value = '';
+            this.isUploading = false;
+          }
+        );
+        break;
+
+      case 'history':
+        this.isUploading = true;
+        this.stockPriceService.uploadPriceHistory(file).subscribe(
+          (data) => {
+            if (data) {
+              if (data.type == HttpEventType.Response) {
+                this.alert.Success('', 'File successfully uploaded.');
+                this.stockPriceHistory.nativeElement.value = '';
+                this.updateStockPrice();
+                this.isUploading = false;
+              }
+            }
+          },
+          (error) => {
+            this.alert.Error('', error);
+            this.stockPriceHistory.nativeElement.value = '';
+            this.isUploading = false;
+          }
+        );
+        break;
+    }
   }
 }

@@ -89,6 +89,9 @@ export class BarChartComponent implements OnInit {
     this.dashboardService
       .getDataBarChart(this.formParams.value)
       .subscribe((data) => {
+        console.log(data);
+
+        return;
         // Graph data processing
         this.broker.length = 0;
         this.total.length = 0;

@@ -25,6 +25,7 @@ namespace STOCK.API.Core.Model
         [Column(TypeName = "varchar(50)")]
         public string Name { get; set; }
 
+        [Column(TypeName = "bigint")]
         public int MaxVolume { get; set; }
         public DateTime FirstUpdateVolume { get; set; }
 

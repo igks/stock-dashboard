@@ -47,6 +47,7 @@
               #dailyPrice
               hidden
               (change)="uploadFile('daily', $event)"
+              multiple
             />
 
             <button
@@ -62,6 +63,7 @@
               #stockPriceHistory
               hidden
               (change)="uploadFile('history', $event)"
+              multiple
             />
           </mat-menu>
         </span>
