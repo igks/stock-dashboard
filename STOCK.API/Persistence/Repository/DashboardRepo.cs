@@ -64,23 +64,29 @@ namespace STOCK.API.Persistence.Repository
                 ).ToList();
 
             var allSummary = new List<object>();
-            var brokerData = new List<object>();
+            var brokerData = new List<BrokerData>();
+            var data = new List<Data>();
 
             for (var indexVolume = 0; indexVolume < volumeList.Count(); indexVolume++)
             {
                 for (var indexBroker = 0; indexBroker < broker.Count(); indexBroker++)
                 {
+                    data.Clear();
                     if (broker[indexBroker] == volumeList[indexVolume].BrokerId)
                     {
-                        brokerData.Add(new
-                        {
-                            date = volumeList[indexVolume].Date,
-                            broker = context.Broker.FirstOrDefault(b => b.Id == volumeList[indexVolume].BrokerId).Name,
-                            netVolume = volumeList[indexVolume].NetVolume
-                        });
+                       
                     }
                 }
+                
+                var newData = new BrokerData(){
+                    Date = volumeList[indexVolume].Date,
+                    Data = data
+                };
+                
+                brokerData.Add(newData);
             }
+
+
             var brokerdatalength = brokerData.Count();
             Console.WriteLine(brokerdatalength);
 
@@ -170,5 +176,16 @@ namespace STOCK.API.Persistence.Repository
 
             // return (new { summary, maxStock, slider });
         }
+
+    }
+
+    public class BrokerData {
+        public DateTime Date { get; set; }
+        public ICollection<Data> Data { get; set; }
+    }
+
+    public class Data {
+        public string Broker { get; set; }
+        public int NetVolume { get; set; }
     }
 }
