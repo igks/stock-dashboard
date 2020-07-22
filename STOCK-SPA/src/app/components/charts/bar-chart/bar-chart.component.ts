@@ -34,6 +34,8 @@ export class BarChartComponent implements OnInit {
   total: number[] = [0, 0, 0, 0, 0];
   axisMax: number = 100;
   sliderList: any = [];
+  dateList: any = [];
+  selectedBrokers: any = [];
   maxSlider: number = 0;
   sliderLabel: string = 'Refresh...';
   initialValue: number = 1;
@@ -89,34 +91,46 @@ export class BarChartComponent implements OnInit {
     this.dashboardService
       .getDataBarChart(this.formParams.value)
       .subscribe((data) => {
-        console.log(data);
-
-        return;
-        // Graph data processing
-        this.broker.length = 0;
-        this.total.length = 0;
-        this.axisMax = data.maxStock;
-
-        data.summary.map((el, ind) => {
-          this.broker[ind] = el.broker;
-          this.total[ind] = el.total;
-        });
-        this.drawChart();
-
         // Slider data processing
         this.sliderList.length = 0;
+        this.dateList.length = 0;
         data.slider.map((el) => {
           let stockDate = this.dateService.dateToTextView(el.stockDate);
           this.sliderList.push(`${stockDate}, ${el.price}`);
+          this.dateList.push(el.stockDate);
         });
         this.maxSlider = data.slider.length;
         this.sliderLabel = this.sliderList[0];
-        this.formatLabel(1);
+        this.initialValue = 1;
+
+        // Graph data processing
+        this.selectedBrokers = data.selectedBrokers;
+        this.axisMax = data.maxStock;
+        this.updateChartData(0);
       });
   }
 
   changeLabel(event) {
     this.sliderLabel = this.sliderList[event.value - 1];
+    this.updateChartData(event.value - 1);
+    this.initialValue = event.value;
+  }
+
+  updateChartData(indexDate) {
+    this.broker.length = 0;
+    this.total.length = 0;
+    let currentDate = this.dateList[indexDate];
+    if (this.updateChartData.length > 0) {
+      this.selectedBrokers.map((broker, index) => {
+        this.broker[index] = broker.name;
+        broker.data.map((data) => {
+          if (data.date == currentDate) {
+            this.total[index] = data.accVolume;
+          }
+        });
+      });
+    }
+    this.drawChart();
   }
 
   formatLabel = (lable) => {
