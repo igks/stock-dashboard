@@ -30,4 +30,20 @@ export class DashboardService {
         })
       );
   }
+
+  getDataStockChart(formParams: any): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('stock', formParams.stock);
+
+    return this.http
+      .get<any>(this.baseUrl + 'dashboard/stockchart/', {
+        observe: 'response',
+        params,
+      })
+      .pipe(
+        map((response) => {
+          return response.body;
+        })
+      );
+  }
 }

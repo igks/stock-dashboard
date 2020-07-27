@@ -22,5 +22,12 @@ namespace STOCK.API.Controllers
             var data = await dashboardRepo.GetBarChartData(dashboardParams);
             return Ok(data);
         }
+
+        [HttpGet("stockchart")]
+        public async Task<IActionResult> GetStockChartData([FromQuery] DashboardParams dashboardParams)
+        {
+            var data = await dashboardRepo.GetStockChartData(dashboardParams);
+            return Ok(data);
+        }
     }
 }

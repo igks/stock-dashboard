@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using STOCK.API.Core.IRepository;
 using STOCK.API.Helpers.Params;
+using STOCK.API.Core.Model;
 
 namespace STOCK.API.Persistence.Repository
 {
@@ -131,20 +132,172 @@ namespace STOCK.API.Persistence.Repository
             return (new { selectedBrokers, maxStock, slider });
         }
 
+        public async Task<object> GetStockChartData(DashboardParams dashboardParams)
+        {
+            // Retrive data
+            var candlesQuery = context.StockPrice.AsQueryable();
+            var volumeQuery = context.StockVolume.AsQueryable();
+            candlesQuery = candlesQuery.Where(c => c.StockId == Int32.Parse(dashboardParams.Stock)).OrderBy(c => c.Date);
+            volumeQuery = volumeQuery.Where(v => v.StockId == Int32.Parse(dashboardParams.Stock)).OrderBy(v => v.Date);
+
+            // Create data for candle, volume and MA
+            var candlesList = new List<Candle>();
+            var volumeList = new List<VolumeBar>();
+
+            foreach (var candle in candlesQuery)
+            {
+                // Create data for candle
+                candlesList.Add(new Candle
+                {
+                    Date = candle.Date,
+                    Open = candle.Open,
+                    Low = candle.Low,
+                    High = candle.High,
+                    Close = candle.Price
+                });
+
+                // Create data for volume
+                volumeList.Add(new VolumeBar
+                {
+                    Date = candle.Date,
+                    Price = candle.Price
+                });
+
+            }
+
+            // Create data for MA
+            var MAList = new List<MA>();
+            var maPeriod = 20;
+            for (int indexCandle = 0; indexCandle < candlesList.Count(); indexCandle++)
+            {
+                var accumulative = 0;
+                var dataLength = 0;
+                if (indexCandle < maPeriod)
+                {
+                    for (int indexMA = 0; indexMA <= indexCandle; indexMA++)
+                    {
+                        accumulative += candlesList[indexCandle - indexMA].Close;
+                        dataLength++;
+                    }
+                    var average = accumulative / dataLength;
+                    MAList.Add(new MA
+                    {
+                        Date = candlesList[indexCandle].Date,
+                        Average = average
+                    });
+                }
+                if (indexCandle >= maPeriod)
+                {
+                    for (int indexMA = 0; indexMA <= maPeriod; indexMA++)
+                    {
+                        accumulative += candlesList[indexCandle - indexMA].Close;
+                    }
+                    var average = accumulative / maPeriod;
+                    MAList.Add(new MA
+                    {
+                        Date = candlesList[indexCandle].Date,
+                        Average = average
+                    });
+                }
+            }
+
+            // Create data for net line
+            // var top3 = new List<Top3>();
+            // var top5 = new List<Top5>();
+            // var net3 = new List<Net3>();
+            // var net5 = new List<Net5>();
+            var netDraft = new List<NetDraft>();
+            var availableDate = new List<DateTime>();
+
+            // Create buffer date
+            foreach (var volume in volumeQuery)
+            {
+                availableDate.Add(volume.Date);
+            }
+
+            // Create buffer data for net for each date
+            var i = 0;
+            foreach (var item in availableDate)
+            {
+                i++;
+                var volumes = new List<StockVolume>();
+                volumes = volumeQuery.Where(v => v.Date.Date == item.Date).ToList();
+
+                foreach (var data in volumes)
+                {
+                    Console.WriteLine(data.BrokerId);
+                }
+
+
+                // Console.WriteLine("Volume index {0} Volume Lenght {1} date {2} ", i, volumes.Count(), volumes[0].Date);
+
+                //var TotalBuy3 = extractValue(volumes, 3, true);
+                // var TotalSell3 = extractValue(volumes, 3, false);
+                // var TotalBuy5 = extractValue(volumes, 5, true);
+                // var TotalSell5 = extractValue(volumes, 5, false);
+
+                // netDraft.Add(new NetDraft
+                // {
+                //     Date = item,
+                //     TotalBuy3 = TotalBuy3,
+                //     // TotalSell3 = TotalSell3,
+                //     // TotalBuy5 = TotalBuy5,
+                //     // TotalSell5 = TotalSell5,
+                //     // DifNet3 = TotalBuy3 - TotalSell3,
+                //     // DifNet5 = TotalBuy5 - TotalSell5
+                // });
+
+            }
+
+            // foreach (var item in netDraft)
+            // {
+            //     Console.WriteLine("Date {0) DifNet3 {1} Difnet5 {2}", item.Date, item.DifNet3, item.DifNet5);
+            // }
+
+
+
+
+
+
+
+
+            return (new { candlesList, volumeList, MAList });
+        }
+
+        private Int32 extractValue(List<StockVolume> volumeQuery, int iteration, bool buy = false)
+        {
+            var value = 0;
+            if (buy)
+            {
+                var volume = volumeQuery.OrderBy(v => v.BuyVolume).ToList();
+                Console.WriteLine(volume.Count());
+                if (volume.Count() >= iteration)
+                {
+                    for (int i = 0; i < iteration; i++)
+                    {
+                        Console.WriteLine(volume[i].BuyVolume);
+                        // value += volume[i].BuyVolume;
+                        // Console.WriteLine(volume.Count());
+                        // Console.WriteLine(i);
+                        // Console.WriteLine(volume[i].BuyVolume);
+                    }
+                }
+            }
+            // if (!buy)
+            // {
+            //     var volume = volumeQuery.OrderBy(v => v.SellVolume).ToList();
+            //     for (int i = 0; i < interation; i++)
+            //     {
+            //         value += volume[i].SellVolume;
+            //     }
+            // }
+            return value;
+        }
     }
 
-    public class BrokerData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Int32 AccVolume { get; set; }
-        public ICollection<Data> Data { get; set; }
-    }
 
-    public class Data
-    {
-        public DateTime Date { get; set; }
-        public Int32 NetVolume { get; set; }
-        public Int32 AccVolume { get; set; }
-    }
+
+
+
+
 }

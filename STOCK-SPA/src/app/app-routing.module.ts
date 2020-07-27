@@ -30,6 +30,19 @@ import { StockPriceFormComponent } from './displays/transactions/stock-price/sto
 import { StockVolumeListComponent } from './displays/transactions/stock-volume/stock-volume-list/stock-volume-list.component';
 import { StockVolumeFormComponent } from './displays/transactions/stock-volume/stock-volume-form/stock-volume-form.component';
 import { BarChartComponent } from './components/charts/bar-chart/bar-chart.component';
+import { LineChartComponent } from './components/charts/line-chart/line-chart.component';
+import { StockChartsComponent } from './components/charts/stock-charts/stock-charts.component';
+
+import {
+  ChartModule,
+  StockChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
+
+import {
+  DateTimeService,
+  CandleSeriesService,
+  TooltipService,
+} from '@syncfusion/ej2-angular-charts';
 
 const routes: Routes = [
   {
@@ -106,6 +119,8 @@ const routes: Routes = [
     StockVolumeListComponent,
     StockVolumeFormComponent,
     BarChartComponent,
+    LineChartComponent,
+    StockChartsComponent,
   ],
   imports: [
     CommonModule,
@@ -127,8 +142,17 @@ const routes: Routes = [
     MatTabsModule,
     MatSlideToggleModule,
     MatSliderModule,
+
+    ChartModule,
+    StockChartAllModule,
   ],
   exports: [RouterModule],
-  providers: [AlertService, ToastrService],
+  providers: [
+    AlertService,
+    ToastrService,
+    DateTimeService,
+    CandleSeriesService,
+    TooltipService,
+  ],
 })
 export class AppRoutingModule {}

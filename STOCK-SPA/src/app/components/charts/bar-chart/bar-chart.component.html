@@ -3,21 +3,14 @@
     <!-- <form name="form" [formGroup]="form"> -->
     <form name="formParams" [formGroup]="formParams">
       <div class="flex flex-row justify-between mb-2">
-        <button
-          class="flex bg-green-400 cursor-pointer p-1 rounded-md text-white text-center hover:bg-green-600"
-          (click)="refresh()"
-          [disabled]="formParams.invalid"
-        >
+        <button class="flex bg-green-400 cursor-pointer p-1 rounded-md text-white text-center hover:bg-green-600"
+          (click)="refresh()" [disabled]="formParams.invalid">
           <span class="self-end">Refresh</span>
           <mat-icon class="ml-2 self-end">refresh</mat-icon>
         </button>
 
-        <mat-slide-toggle
-          [(ngModel)]="isTop5"
-          (change)="toggler($event)"
-          formControlName="isTop5"
-          >{{ toggleText }}</mat-slide-toggle
-        >
+        <mat-slide-toggle [(ngModel)]="isTop5" (change)="toggler($event)" formControlName="isTop5">{{ toggleText }}
+        </mat-slide-toggle>
       </div>
       <div class="flex flex-row justify-between">
         <div aria-label="select year container" class="w-2/5 mr-2">
@@ -55,14 +48,7 @@
   </div>
   <div #Chart style="width: 100%; max-height: 600px;"></div>
   <div class="mt-20">
-    <mat-slider
-      thumbLabel
-      [displayWith]="formatLabel(sliderLabel)"
-      min="1"
-      [max]="maxSlider"
-      class="w-11/12"
-      [value]="initialValue"
-      (change)="changeLabel($event)"
-    ></mat-slider>
+    <mat-slider thumbLabel [displayWith]="formatLabel(sliderLabel)" min="1" [max]="maxSlider" class="w-11/12"
+      [value]="initialValue" (change)="changeLabel($event)"></mat-slider>
   </div>
 </div>
