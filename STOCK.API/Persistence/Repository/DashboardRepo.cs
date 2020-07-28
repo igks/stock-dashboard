@@ -202,66 +202,77 @@ namespace STOCK.API.Persistence.Repository
             }
 
             // Create data for net line
-            // var top3 = new List<Top3>();
-            // var top5 = new List<Top5>();
-            // var net3 = new List<Net3>();
-            // var net5 = new List<Net5>();
+            var net3 = new List<Net3>();
+            var net5 = new List<Net5>();
             var netDraft = new List<NetDraft>();
-            var availableDate = new List<DateTime>();
+            var allAvailableDate = new List<DateTime>();
 
             // Create buffer date
             foreach (var volume in volumeQuery)
             {
-                availableDate.Add(volume.Date);
+                allAvailableDate.Add(volume.Date);
             }
 
+            //Remove duplicate date
+            var filteredDate = allAvailableDate.Distinct().ToList();
+
             // Create buffer data for net for each date
-            var i = 0;
-            foreach (var item in availableDate)
+            foreach (var item in filteredDate)
             {
-                i++;
                 var volumes = new List<StockVolume>();
                 volumes = volumeQuery.Where(v => v.Date.Date == item.Date).ToList();
 
-                foreach (var data in volumes)
+                var TotalBuy3 = extractValue(volumes, 3, true);
+                var TotalSell3 = extractValue(volumes, 3, false);
+                var TotalBuy5 = extractValue(volumes, 5, true);
+                var TotalSell5 = extractValue(volumes, 5, false);
+
+                netDraft.Add(new NetDraft
                 {
-                    Console.WriteLine(data.BrokerId);
-                }
-
-
-                // Console.WriteLine("Volume index {0} Volume Lenght {1} date {2} ", i, volumes.Count(), volumes[0].Date);
-
-                //var TotalBuy3 = extractValue(volumes, 3, true);
-                // var TotalSell3 = extractValue(volumes, 3, false);
-                // var TotalBuy5 = extractValue(volumes, 5, true);
-                // var TotalSell5 = extractValue(volumes, 5, false);
-
-                // netDraft.Add(new NetDraft
-                // {
-                //     Date = item,
-                //     TotalBuy3 = TotalBuy3,
-                //     // TotalSell3 = TotalSell3,
-                //     // TotalBuy5 = TotalBuy5,
-                //     // TotalSell5 = TotalSell5,
-                //     // DifNet3 = TotalBuy3 - TotalSell3,
-                //     // DifNet5 = TotalBuy5 - TotalSell5
-                // });
-
+                    Date = item,
+                    TotalBuy3 = TotalBuy3,
+                    TotalSell3 = TotalSell3,
+                    TotalBuy5 = TotalBuy5,
+                    TotalSell5 = TotalSell5,
+                    DifNet3 = TotalBuy3 - TotalSell3,
+                    DifNet5 = TotalBuy5 - TotalSell5
+                });
             }
 
-            // foreach (var item in netDraft)
-            // {
-            //     Console.WriteLine("Date {0) DifNet3 {1} Difnet5 {2}", item.Date, item.DifNet3, item.DifNet5);
-            // }
+            // populate net data
+            for (int i = 0; i < netDraft.Count(); i++)
+            {
+                if (i == 0)
+                {
+                    net3.Add(new Net3
+                    {
+                        Date = netDraft[i].Date,
+                        Net3Value = netDraft[i].DifNet3
+                    });
 
+                    net5.Add(new Net5
+                    {
+                        Date = netDraft[i].Date,
+                        Net5Value = netDraft[i].DifNet5
+                    });
+                }
+                if (i > 0)
+                {
+                    net3.Add(new Net3
+                    {
+                        Date = netDraft[i].Date,
+                        Net3Value = net3[i - 1].Net3Value + netDraft[i].DifNet3
+                    });
 
+                    net5.Add(new Net5
+                    {
+                        Date = netDraft[i].Date,
+                        Net5Value = net5[i - 1].Net5Value + netDraft[i].DifNet5
+                    });
+                }
+            }
 
-
-
-
-
-
-            return (new { candlesList, volumeList, MAList });
+            return (new { candlesList, volumeList, MAList, net3, net5 });
         }
 
         private Int32 extractValue(List<StockVolume> volumeQuery, int iteration, bool buy = false)
@@ -269,35 +280,27 @@ namespace STOCK.API.Persistence.Repository
             var value = 0;
             if (buy)
             {
-                var volume = volumeQuery.OrderBy(v => v.BuyVolume).ToList();
-                Console.WriteLine(volume.Count());
+                var volume = volumeQuery.OrderByDescending(v => v.BuyVolume).ToList();
                 if (volume.Count() >= iteration)
                 {
                     for (int i = 0; i < iteration; i++)
                     {
-                        Console.WriteLine(volume[i].BuyVolume);
-                        // value += volume[i].BuyVolume;
-                        // Console.WriteLine(volume.Count());
-                        // Console.WriteLine(i);
-                        // Console.WriteLine(volume[i].BuyVolume);
+                        value += volume[i].BuyVolume;
                     }
                 }
             }
-            // if (!buy)
-            // {
-            //     var volume = volumeQuery.OrderBy(v => v.SellVolume).ToList();
-            //     for (int i = 0; i < interation; i++)
-            //     {
-            //         value += volume[i].SellVolume;
-            //     }
-            // }
+            if (!buy)
+            {
+                var volume = volumeQuery.OrderByDescending(v => v.SellVolume).ToList();
+                if (volume.Count() >= iteration)
+                {
+                    for (int i = 0; i < iteration; i++)
+                    {
+                        value += volume[i].SellVolume;
+                    }
+                }
+            }
             return value;
         }
     }
-
-
-
-
-
-
 }
