@@ -34,6 +34,7 @@ export class DashboardService {
   getDataStockChart(formParams: any): Observable<any> {
     let params = new HttpParams();
     params = params.append('stock', formParams.stock);
+    params = params.append('year', formParams.year);
 
     return this.http
       .get<any>(this.baseUrl + 'dashboard/stockchart/', {

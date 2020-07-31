@@ -272,6 +272,12 @@ namespace STOCK.API.Persistence.Repository
                 }
             }
 
+            candlesList = candlesList.Where(c => c.Date.Year == dashboardParams.Year).ToList();
+            volumeList = volumeList.Where(c => c.Date.Year == dashboardParams.Year).ToList();
+            MAList = MAList.Where(c => c.Date.Year == dashboardParams.Year).ToList();
+            net3 = net3.Where(c => c.Date.Year == dashboardParams.Year).ToList();
+            net5 = net5.Where(c => c.Date.Year == dashboardParams.Year).ToList();
+
             return (new { candlesList, volumeList, MAList, net3, net5 });
         }
 

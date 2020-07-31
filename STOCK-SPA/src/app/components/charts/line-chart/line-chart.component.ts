@@ -18,23 +18,23 @@ export class LineChartComponent implements OnInit {
     // Some raw data (not necessarily accurate)
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Month');
-    data.addColumn('number', 'Low');
-    data.addColumn('number', 'Open');
+    // data.addColumn('number', 'Low');
+    // data.addColumn('number', 'Open');
     data.addColumn('number', 'Close');
-    data.addColumn('number', 'Height');
+    // data.addColumn('number', 'Height');
     data.addColumn('number', 'Net5');
     data.addColumn('number', 'Net3');
 
     const preData = [];
 
-    for (let index = 0; index < 1000; index++) {
+    for (let index = 0; index < 135; index++) {
       let low = Math.floor(Math.random() * 1000 + 1);
       let open = Math.floor(Math.random() * 1000 + 1);
       let close = Math.floor(Math.random() * 1000 + 1);
       let height = Math.floor(Math.random() * 1000 + 1);
       let net5 = Math.floor(Math.random() * 1000 + 1);
       let net3 = Math.floor(Math.random() * 1000 + 1);
-      preData.push([index.toString(), low, open, close, height, net5, net3]);
+      preData.push([index.toString(), close, net5, net3]);
     }
 
     data.addRows(preData);
@@ -49,10 +49,11 @@ export class LineChartComponent implements OnInit {
     // ]);
 
     var options = {
+      width: 900,
       legend: 'none',
       title: '',
       vAxis: {},
-      seriesType: 'candlesticks',
+      seriesType: 'line',
       series: { 1: { type: 'line' }, 2: { type: 'line' } },
       explorer: { axis: 'horizontal' },
     };

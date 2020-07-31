@@ -32,6 +32,8 @@ import { StockVolumeFormComponent } from './displays/transactions/stock-volume/s
 import { BarChartComponent } from './components/charts/bar-chart/bar-chart.component';
 import { LineChartComponent } from './components/charts/line-chart/line-chart.component';
 import { StockChartsComponent } from './components/charts/stock-charts/stock-charts.component';
+import { ApexChartComponent } from './components/charts/apex-chart/apex-chart.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 import {
   ChartModule,
@@ -121,6 +123,7 @@ const routes: Routes = [
     BarChartComponent,
     LineChartComponent,
     StockChartsComponent,
+    ApexChartComponent,
   ],
   imports: [
     CommonModule,
@@ -145,6 +148,8 @@ const routes: Routes = [
 
     ChartModule,
     StockChartAllModule,
+
+    NgApexchartsModule,
   ],
   exports: [RouterModule],
   providers: [
