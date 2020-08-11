@@ -30,7 +30,6 @@ import { StockPriceFormComponent } from './displays/transactions/stock-price/sto
 import { StockVolumeListComponent } from './displays/transactions/stock-volume/stock-volume-list/stock-volume-list.component';
 import { StockVolumeFormComponent } from './displays/transactions/stock-volume/stock-volume-form/stock-volume-form.component';
 import { BarChartComponent } from './components/charts/bar-chart/bar-chart.component';
-import { LineChartComponent } from './components/charts/line-chart/line-chart.component';
 import { StockChartsComponent } from './components/charts/stock-charts/stock-charts.component';
 import { ApexChartComponent } from './components/charts/apex-chart/apex-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -121,7 +120,6 @@ const routes: Routes = [
     StockVolumeListComponent,
     StockVolumeFormComponent,
     BarChartComponent,
-    LineChartComponent,
     StockChartsComponent,
     ApexChartComponent,
   ],

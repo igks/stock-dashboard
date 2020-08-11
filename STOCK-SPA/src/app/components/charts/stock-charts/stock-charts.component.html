@@ -30,9 +30,24 @@
   </div>
 </form>
 
+<!-- Candle chart -->
+<div id="candleChart">
+  <apx-chart [series]="candleChartOptions.series" [chart]="candleChartOptions.chart" [xaxis]="candleChartOptions.xaxis"
+    [yaxis]="candleChartOptions.yaxis" [title]="candleChartOptions.title">
+  </apx-chart>
+</div>
 
+<!-- Line chart -->
+<div id="lineChart">
+  <apx-chart [series]="lineChartOptions.series" [chart]="lineChartOptions.chart" [xaxis]="lineChartOptions.xaxis"
+    [yaxis]="lineChartOptions.yaxis" [title]="lineChartOptions.title">
+  </apx-chart>
+</div>
 
-<div id="chart">
-  <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
-    [title]="chartOptions.title" [tooltip]="chartOptions.tooltip" [stroke]="chartOptions.stroke"></apx-chart>
+<!-- Combo chart -->
+<div id="comboChart">
+  <apx-chart [series]="comboChartOptions.series" [chart]="comboChartOptions.chart" [yaxis]="comboChartOptions.yaxis"
+    [xaxis]="comboChartOptions.xaxis" [labels]="comboChartOptions.labels" [stroke]="comboChartOptions.stroke"
+    [title]="comboChartOptions.title" [dataLabels]="comboChartOptions.dataLabels" [fill]="comboChartOptions.fill"
+    [tooltip]="comboChartOptions.tooltip"></apx-chart>
 </div>

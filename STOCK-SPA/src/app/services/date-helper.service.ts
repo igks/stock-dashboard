@@ -48,4 +48,13 @@ export class DateHelperService {
       d.getFullYear(),
     ].join(' ');
   }
+
+  dateAndMonth(unformat) {
+    const dgt = (d) => {
+      return d < 10 ? '0' + d : d;
+    };
+
+    const d = new Date(unformat);
+    return [dgt(d.getDate()), this.monthList[d.getMonth()]].join(' ');
+  }
 }
